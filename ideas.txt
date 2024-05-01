@@ -1,0 +1,4 @@
+palabra desnuda: mayúsculas, prefijos y sufijos -> armar base de pre-sufijos
+insertar en trie, además del EOW, usar un % de aparición u nro absoluto
+armar base de datos de artículos, conectores (?
+armar base de datos de palabras claves (?
