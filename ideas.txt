@@ -35,7 +35,7 @@ FUNCIONES
             para las mayúsculas usamos .lower()
     FUNCION_4: toma una tabla hash
         el tamaño de la hash podría inicializarle en función del tamaño del pdf, si después de agregarle palabras se llena, agrandarla según algún criterio
-        agregamos la palabra desnuda y actualizamos su value asociado
+        agregamos la palabra desnuda y actualizamos su value de aparición (%, absoluta o similar) asociado
 
 CONCEPTOS
 __clasificable__: una palabra podría ser clasificable si NO ES: un artículo, conector, proposición o palabras similares que no sean "desarmables", es decir, no pueda encontrarse su "raíz"
