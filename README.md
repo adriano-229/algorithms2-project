@@ -3,3 +3,5 @@
 Proyecto Algoritmos2 - Base de Datos
 
 Francisco Aragona
+
+Renzo Davila
