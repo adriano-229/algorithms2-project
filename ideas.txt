@@ -39,3 +39,8 @@ FUNCIONES
 
 CONCEPTOS
 __clasificable__: una palabra podría ser clasificable si NO ES: un artículo, conector, proposición o palabras similares que no sean "desarmables", es decir, no pueda encontrarse su "raíz"
+
+IDEAS
+preferir with antes que open + close
+usar yaml en caso sea necesario
+pickle.dump(objeto, nombre_archivo_f) p es para serializar = "transformar en un formato adecuado para guardar el archivo en memoria"
