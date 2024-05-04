@@ -1,11 +1,12 @@
 
+
 ANALISIS TOP-DOWN
 
 ESTRUCTURA GENERAL (lo vamos extendiendo de arriba a abajo)
 
     CREATE
         dada una carpeta de archivos pdf
-        para cada archivo pdf dentro de la carpeta hacer
+        para cada archivo pdf dentro de la carpeta hacer:
             tomar el texto
             FUNCION_1: separar el texto en palabras
             FUNCION_2: discernir su naturaleza
@@ -13,34 +14,41 @@ ESTRUCTURA GENERAL (lo vamos extendiendo de arriba a abajo)
             (si no lo es, saltear)
                 tomar la palabra que es __clasificable__ y hacer:
                     FUNCION_3: dejar la palabra desnuda
-                    FUNCION_4: insertarla en un una HASH/TRIE, capaz hash sería la adecuada
-            ... al final, tendríamos tantas hashes como pdf's
+                    FUNCION_4: insertarla en un HASH
+            >>> al final, tendríamos tantas hashes como pdf's
 
-    SEARCH texto
-        tomar criterios para la semántica -> armar base de datos de palabras claves (???
+    SEARCH <texto>
+        (tomar criterios para la semántica > armar base de datos de palabras clave)
         ponderar entre:
-            + correspondencia o "parecido" respecto a la base de datos de palabras (???
-            + procesar cada palabra de búsqueda "texto" segun la FUNCION_2,3y4 y ver su similitud con la respectiva hash (???
-        arrojar % de correspondencia entre el texto a buscar y cada hash base, armar lista
+            + correspondencia o "parecido" respecto a la base de datos de palabras clave (?
+            + procesar cada palabra de búsqueda "texto" usando la FUNCION_2,3y4 y ver su similitud con la respectiva hash (???
+        arrojar % de correspondencia entre el texto a buscar y cada hash de la base, armar la lista con % de parecidos
         ordenar lista y presentarla
 
 
 
 FUNCIONES
     FUNCION_1: el criterio puede ser mediante espacios, creo que es relativamente fácil implementar esto
-    FUNCION_2: ver qué tomamos como palabra __clasificable__, podemos usar un BDD para esto (?
+    FUNCION_2: ver qué tomamos como palabra __clasificable__, podemos usar una base de datos para esto (?
     FUNCION_3: dejar la palabra desnuda = que quede la "raíz"
         para eso tendremos que quitarle mayúsculas, prefijos y sufijos
             para los prefijos podríamos armar una base de datos con prefijos y sufijos típicos
             para las mayúsculas usamos .lower()
-    FUNCION_4: toma una tabla hash
-        el tamaño de la hash podría inicializarle en función del tamaño del pdf, si después de agregarle palabras se llena, agrandarla según algún criterio
+    FUNCION_4: toma una tabla hash que usa encadenamiento y agrega la palabra en base a una función de hash a saber
+        el tamaño de la hash podría inicializarle en función del tamaño del pdf o cantidad de páginas, si después de agregarle palabras la tabla se llena
         agregamos la palabra desnuda y actualizamos su value de aparición (%, absoluta o similar) asociado
+
+
 
 CONCEPTOS
 __clasificable__: una palabra podría ser clasificable si NO ES: un artículo, conector, proposición o palabras similares que no sean "desarmables", es decir, no pueda encontrarse su "raíz"
 
+
+
 IDEAS
 preferir with antes que open + close
 usar yaml en caso sea necesario
-pickle.dump(objeto, nombre_archivo_f) p es para serializar = "transformar en un formato adecuado para guardar el archivo en memoria"
+pickle.dump(objeto, nombre_archivo_f), sirve para serializar = "transformar en un formato adecuado para guardar el archivo en memoria"
+
+
+
