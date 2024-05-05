@@ -17,7 +17,7 @@ ESTRUCTURA GENERAL (lo vamos extendiendo de arriba a abajo)
                 tomar la palabra que es __clasificable__ y hacer:
                     FUNCION_3: desnudar la palabra
                     FUNCION_4: buscarle una __palabraasociada__ en el TRIE, si no tiene, agregarla al TRIE
-                    FUNCION_5: en base a si la palabra tuvo o no una palabra asociada (tupla entregada por FUNCION_4), actualizar valor en HASH
+                    FUNCION_5: en base a lo entregado por FUNCION_4, actualizar valor en HASH
             >>> al final, tendríamos tantas TRIES y HASHES como pdf's
 
     SEARCH <texto>
