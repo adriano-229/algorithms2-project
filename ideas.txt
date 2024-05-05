@@ -6,16 +6,19 @@ ESTRUCTURA GENERAL (lo vamos extendiendo de arriba a abajo)
 
     CREATE
         dada una carpeta de archivos pdf
-        para cada archivo pdf dentro de la carpeta hacer:
-            tomar el texto
+        para cada archivo pdf "P" dentro de la carpeta hacer:
+            tomar el texto P
+            crear un TRIE para P
+            crear una HASH para P
             FUNCION_1: separar el texto en palabras
-            FUNCION_2: discernir su naturaleza
+            FUNCION_2: discernir su naturaleza: es __clasificable__ o no
             si la palabra es __clasificable__ hacer:
-            (si no lo es, saltear)
+            (si no lo es, pasar a la próxima palabra)
                 tomar la palabra que es __clasificable__ y hacer:
-                    FUNCION_3: dejar la palabra desnuda
-                    FUNCION_4: insertarla en un HASH
-            >>> al final, tendríamos tantas hashes como pdf's
+                    FUNCION_3: desnudar la palabra
+                    FUNCION_4: buscarle una __palabraasociada__ en el TRIE, si no tiene, agregarla al TRIE
+                    FUNCION_5: en base a si la palabra tuvo o no una palabra asociada (tupla entregada por FUNCION_4), actualizar valor en HASH
+            >>> al final, tendríamos tantas TRIES y HASHES como pdf's
 
     SEARCH <texto>
         (tomar criterios para la semántica > armar base de datos de palabras clave)
@@ -28,22 +31,29 @@ ESTRUCTURA GENERAL (lo vamos extendiendo de arriba a abajo)
 
 
 FUNCIONES
-    FUNCION_1: el criterio puede ser mediante espacios, creo que es relativamente fácil implementar esto
+    FUNCION_1: el criterio para separar las palabras puede y suele ser mediante espacios, es relativamente fácil implementar esto usando la función .split(' ')
     FUNCION_2: ver qué tomamos como palabra __clasificable__, podemos usar una base de datos para esto (?
-    FUNCION_3: dejar la palabra desnuda = que quede la "raíz"
-        para eso tendremos que quitarle mayúsculas, prefijos y sufijos
-            para los prefijos podríamos armar una base de datos con prefijos y sufijos típicos
-            para las mayúsculas usamos .lower()
-    FUNCION_4: toma una tabla hash que usa encadenamiento y agrega la palabra en base a una función de hash a saber
-        el tamaño de la hash podría inicializarle en función del tamaño del pdf o cantidad de páginas, si después de agregarle palabras la tabla se llena
-        agregamos la palabra desnuda y actualizamos su value de aparición (%, absoluta o similar) asociado
+    FUNCION_3: dejar la palabra desnuda = una palabra se desnuda cuando:
+        a) se le quita el prefijo: para ello, veremos si la palabra es candidata a tener un prefijo comparándola, letra por letra, con una base de datos que contiene los prefijos más comúnes del español
+        b) se le quita las mayúsculas: usamos .lower()
+        c) se le quitan las tildes: acá barremos la palabra letra por letra, viendo si posee una tilde, se intercambia la tilde por la vocal destildada (ó por o, é por e, y así)
+        una vez la palabra se ha desnudado, se la retorna
+    FUNCION_4: esta toma una palabra a buscar B, y le busca en el TRIE una __palabraasociada__ A, luego:
+        si se le encontró una __palabraasociada__ A: B no se agrega al TRIE, la función devuelve A
+        si no le encontró una __palabraasociada__ A: B agrega al TRIE, la función devuelve B
+    FUNCION_5: toma una tabla hash que usa encadenamiento, y una palabra P
+        el tamaño de la hash podría inicializarle en función del tamaño del pdf en bytes una vez lo hayamos pasado a string con la librería por la cantidad de páginas del mismo archivo en bytes
+        se usa a una función de hash (a saber), como la suma de los ord("c")
+        según la hash:
+            si P ya existe: agregamos P a la hash y actualizamos su value de aparición (%, absoluta=1)
+            si P no existe: solamente actualizamos el value de aparición de P (%, absoluta=absoluta+1)
 
 
 
 CONCEPTOS
 __clasificable__: una palabra podría ser clasificable si NO ES: un artículo, conector, proposición o palabras similares que no sean "desarmables", es decir, no pueda encontrarse su "raíz"
-
-
+__palabraasociada__: se dice que una palabra A está asociada a una palabra C cuando A contiene por lo menos la mitad* de los caracteres que tiene B en forma ordenada (A=contraataque len=12 - B=ataque len=6, como 6>=12/2, A y B están asociadas)
+    * podemos ajustar este valor
 
 IDEAS
 preferir with antes que open + close
