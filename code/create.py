@@ -3,6 +3,8 @@ import re
 
 import PyPDF2
 
+import classification_db as cl
+
 
 def pdf2str(path, file):
     with open(os.path.join(path, file), 'rb') as f:
@@ -11,7 +13,6 @@ def pdf2str(path, file):
 
         for p in range(len(reader.pages)):
             txt += reader.pages[p].extract_text()
-
     return txt
 
 
@@ -20,24 +21,33 @@ def str2words(txt):
 
     for s in txt:
         words.append(s.split(" "))
-
     return words
 
 
-def clean_words(txt):
-    clean_words = []
+def replace_all(text):
+    for sym, _ in cl.extra.items():
+        text = text.replace(sym, _)
+    return text
 
-    terms = txt.split(" ")
-    for t in terms:
-        lower_t = t.lower()
-        clean_t = re.findall(r'\b[a-zA-Záéíóúñ0-9-]+\b', lower_t)
-        word = ""
-        if len(clean_t) > 0:
-            clean_t = clean_t[0].split("-")
-            for w in clean_t:
-                word += w
-            clean_words.append(word)
-    return clean_words
+
+def clean_term(t):
+    clean_t = t.lower()
+    clean_t = re.findall(r'\b[a-zA-Záéíóúñ0-9-!¡¿?]+\b', clean_t)
+    if len(clean_t) == 1:
+        return replace_all(clean_t[0])
+    return None
+
+
+def is_classifiable(word):
+    if not word:
+        return False
+    if len(word) < 3:
+        return False
+    if word in cl.pronombres:
+        return False
+    if word in cl.preposiciones:
+        return False
+    return True
 
 
 def create(path):
@@ -52,13 +62,13 @@ def create(path):
     words = []
 
     for pdf in pdfs:
-        words.append(clean_words(pdf))
+        terms = pdf.split(' ')
 
-    for w in words:
-        txt = ""
-        for word in w:
-            txt += word + ' '
-        print(txt)
+        for term in terms:
+            word = clean_term(term)
+            if is_classifiable(word):  # colocar filtro de palabras innecesarias
+                words.append(word)
+                print(word, end=' ')
 
 
 if __name__ == "__main__":
