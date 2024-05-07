@@ -1,46 +1,65 @@
 import os
+import re
 
 import PyPDF2
 
 
-def pdf_to_string(path):
-    if not os.path.isdir(path):
-        return "The provided path is not a directory"
+def pdf2str(path, file):
+    with open(os.path.join(path, file), 'rb') as f:
+        reader = PyPDF2.PdfReader(f)
+        txt = ""
 
-    pdf_contents = []
+        for p in range(len(reader.pages)):
+            txt += reader.pages[p].extract_text()
 
-    # Iterate over each file in the directory
-    for filename in os.listdir(path):
-        # Open the PDF file to read & bytes
-        with open(os.path.join(path, filename), 'rb') as file:
-            pdf_reader = PyPDF2.PdfFileReader(file)
-            content = ""
-
-            # Iterate over each page in the PDF
-            for page_num in range(pdf_reader.getNumPages()):
-                content += pdf_reader.getPage(page_num).extractText()
-
-            pdf_contents.append(content)
-
-    return pdf_contents
+    return txt
 
 
-def split_into_words(list_of_strings):
-    # List to hold the list of words for each string
-    list_of_word_lists = []
+def str2words(txt):
+    words = []
 
-    # Iterate over each string in the list
-    for string in list_of_strings:
-        # Split the string into words and add the list of words to the list
-        list_of_word_lists.append(string.split(" "))
+    for s in txt:
+        words.append(s.split(" "))
 
-    return list_of_word_lists
+    return words
+
+
+def clean_words(txt):
+    clean_words = []
+
+    terms = txt.split(" ")
+    for t in terms:
+        lower_t = t.lower()
+        clean_t = re.findall(r'\b[a-zA-Záéíóúñ0-9-]+\b', lower_t)
+        word = ""
+        if len(clean_t) > 0:
+            clean_t = clean_t[0].split("-")
+            for w in clean_t:
+                word += w
+            clean_words.append(word)
+    return clean_words
 
 
 def create(path):
-    pdf_string_list = pdf_to_string(path)
-    words_pdf_list = split_into_words(pdf_string_list)
+    if not os.path.isdir(path):
+        return "The provided path is not a directory"
 
-    for pdf_string in words_pdf_list:
-        for word in pdf_string:
-            print(word)
+    pdfs = []
+
+    for file in os.listdir(path):
+        pdfs.append(pdf2str(path, file))
+
+    words = []
+
+    for pdf in pdfs:
+        words.append(clean_words(pdf))
+
+    for w in words:
+        txt = ""
+        for word in w:
+            txt += word + ' '
+        print(txt)
+
+
+if __name__ == "__main__":
+    create("/home/admin1/Documents/proyecto-algo2/code/pdfs_prueba")
