@@ -30,14 +30,8 @@ def separate(term):
     return separate
 
 
-def clean(word):
-    for sym, rpl in wc.cambios.items():
-        word = word.replace(sym, rpl)
-    return word
-
-
 def is_classifiable(word):
-    if len(word) < 3 or word in list(wc.pronombres) + list(wc.preposiciones):
+    if len(word) < 3 or word in wc.descartes:
         return False
     try:
         n = int(word)
@@ -50,7 +44,8 @@ def is_classifiable(word):
 
 def create(path):
     if not os.path.isdir(path):
-        return "The provided path is not a directory"
+        print("The provided path is not a directory")
+        return
 
     pdfs = []
     for file in os.listdir(path):
@@ -60,12 +55,11 @@ def create(path):
     for pdf in pdfs:
         for term in pdf.split(' '):
             for word in separate(term):
-
-                word = clean(word)
-                if is_classifiable(word):
-                    valid_words.append(word)
-                    # print(word, end=' ')
+                c_word = wc.clean(word)
+                if is_classifiable(c_word):
+                    valid_words.append(c_word)
+                    print(c_word, end=' ')  # todo: empezar a implementar Trie desde acá
 
 
 if __name__ == "__main__":
-    create("/code/test_pdfs")
+    create("/home/admin1/Documents/proyecto-algo2/code/test_pdfs")
