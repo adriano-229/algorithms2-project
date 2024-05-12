@@ -62,4 +62,4 @@ def create(path):
 
 
 if __name__ == "__main__":
-    create("/home/admin1/Documents/proyecto-algo2/code/test_pdfs")
+    create("/home/admin1/Documents/proyecto-algo2/code/test_pdfs")  # poner el directorio adecuado
