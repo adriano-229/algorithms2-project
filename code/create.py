@@ -3,7 +3,7 @@ import re
 
 import PyPDF2
 
-import classification_db as cl
+import word_class as wc
 
 
 def pdf2str(path, file):
@@ -24,52 +24,42 @@ def str2words(txt):
     return words
 
 
-def replace_all(text):
-    for sym, _ in cl.extra.items():
-        text = text.replace(sym, _)
-    return text
-
-
-def clean_term(t):
-    clean_t = t.lower()
-    clean_t = re.findall(r'\b[a-zA-Záéíóúñ0-9-!¡¿?]+\b', clean_t)
-    if len(clean_t) == 1:
-        return replace_all(clean_t[0])
-    return None
+def separate(term):
+    lowered = term.lower()
+    separate = re.findall(r'[a-zA-ZñÑáéíóúÁÉÍÓÚ]+|\d+', lowered)
+    return separate
 
 
 def is_classifiable(word):
-    if not word:
+    if len(word) < 3 or word in wc.descartes:
         return False
-    if len(word) < 3:
-        return False
-    if word in cl.pronombres:
-        return False
-    if word in cl.preposiciones:
-        return False
+    try:
+        n = int(word)
+        if n not in range(1000, 3001):
+            return False
+    except:
+        pass
     return True
 
 
 def create(path):
     if not os.path.isdir(path):
-        return "The provided path is not a directory"
+        print("The provided path is not a directory")
+        return
 
     pdfs = []
-
     for file in os.listdir(path):
         pdfs.append(pdf2str(path, file))
 
-    words = []
-
+    valid_words = []
     for pdf in pdfs:
-        terms = pdf.split(' ')
-
-        for term in terms:
-            word = clean_term(term)
-            if is_classifiable(word):  # colocar filtro de palabras innecesarias
-                words.append(word)
-                print(word, end=' ')
+        for term in pdf.split(' '):
+            for word in separate(term):
+                c_word = wc.clean(word)
+                if is_classifiable(c_word):
+                    valid_words.append(c_word)
+                    print(c_word, end=' ')  # todo: empezar a implementar Trie desde acá
 
 
 if __name__ == "__main__":
-    create("/home/admin1/Documents/proyecto-algo2/code/pdfs_prueba")
+    create("/home/admin1/Documents/proyecto-algo2/code/test_pdfs")
