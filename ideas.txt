@@ -1,16 +1,13 @@
 
-
-ANALISIS TOP-DOWN
-
-ESTRUCTURA GENERAL (lo vamos extendiendo de arriba a abajo)
+ESTRUCTURA GENERAL DEL ALGORITMO EN BASE A UN ANÁLISIS TOP-DOWN
 
     CREATE
-        dada una carpeta de archivos pdf
+        dada una carpeta de archivos pdf hacer:
         para cada archivo pdf "P" dentro de la carpeta hacer:
-            tomar el texto P
+
             crear un TRIE para P
             crear una HASH para P
-            FUNCION_1: separar el texto en palabras
+            FUNCIÓN_1: separar el texto en palabras
             FUNCION_2: discernir su naturaleza: es __clasificable__ o no
             si la palabra es __clasificable__ hacer:
             (si no lo es, pasar a la próxima palabra)
@@ -61,4 +58,12 @@ usar yaml en caso sea necesario
 pickle.dump(objeto, nombre_archivo_f), sirve para serializar = "transformar en un formato adecuado para guardar el archivo en memoria"
 
 
+
+Dada una lista de palabras pertenecientes a un documento, necesitamos una función con esta especificación:
+
+getFreqHash(lst)
+
+Entrada: lista Python de palabras (strings)
+Proceso: se crea una tabla hash que use linear probing, esta tabla debe tener por slots el par (key, value) donde "key" es el string y "value" es la cantidad de veces que ha aparecido esa palabra dividido entre el número total de palabras (n)
+Salida: la tabla hash resultante
 
