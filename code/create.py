@@ -1,3 +1,4 @@
+import math
 import os
 import re
 
@@ -30,33 +31,24 @@ def separate(term):
     return separate
 
 
-def is_classifiable(word):
-    if len(word) < 3 or word in wc.descartes:
-        return False
-    try:
-        n = int(word)
-        if n not in range(1000, 3001):
-            return False
-    except:
-        pass
-    return True
-
-
-def hash_freq_counter(pdf):
-    dic = dict()
+def tf_idf_tables(i, pdf, idf):
+    tf = {}
     tot = 0
     for term in pdf.split(' '):
         words = separate(term)
         for word in words:
-            c_word = wc.clean(word)
-            # if not is_classifiable(c_word):
-            #     continue
+            word = wc.clean(word)
+            if not word:
+                continue
             tot += 1
-            dic[word] = dic.get(word, 0) + 1
-    for key, value in dic.items():
-        dic[key] = value / tot
-    print(dic)
-    return dic
+
+            tf[word] = tf.get(word, 0) + 1
+            if tf[word] == 1:
+                idf[word] = idf.get(word, 0) + 1
+
+    for key, _ in tf.items():
+        tf[key] /= tot
+    return tf
 
 
 def create(path):
@@ -68,11 +60,24 @@ def create(path):
     for file in os.listdir(path):
         pdfs.append(pdf2str(path, file))
 
-    dicts = []
-    for pdf in pdfs:
-        dicts.append(hash_freq_counter(pdf))
+    n = len(pdfs)
+
+    w = []
+    idf = {}
+    for i, pdf in enumerate(pdfs):
+        w.append(tf_idf_tables(i, pdf, idf))
+
+    for table in w:
+        for key, value in table.items():
+            tf_ = table[key]
+            idf_ = math.log2(n / value)
+            table[key] = tf_ * idf_
+    # for table in w: todo: chequear 2), 1) si este bucle funciona, 2) que lo que arroja esté bien
+    #     for w in sorted(table, key=table.get, reverse=True):
+    #         print(w, table[w])
 
 
 
 if __name__ == "__main__":
-    create("/home/admin1/Documents/proyecto-algo2/code/test_pdfs")  # poner el directorio adecuado
+    create(
+        "/home/admin1/Documents/Universidad/2do/Algoritmos 2/proyecto-algo2/code/test_pdfs")  # poner el directorio adecuado
