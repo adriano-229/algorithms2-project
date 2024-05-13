@@ -42,6 +42,23 @@ def is_classifiable(word):
     return True
 
 
+def hash_freq_counter(pdf):
+    dic = dict()
+    tot = 0
+    for term in pdf.split(' '):
+        words = separate(term)
+        for word in words:
+            c_word = wc.clean(word)
+            # if not is_classifiable(c_word):
+            #     continue
+            tot += 1
+            dic[word] = dic.get(word, 0) + 1
+    for key, value in dic.items():
+        dic[key] = value / tot
+    print(dic)
+    return dic
+
+
 def create(path):
     if not os.path.isdir(path):
         print("The provided path is not a directory")
@@ -51,14 +68,10 @@ def create(path):
     for file in os.listdir(path):
         pdfs.append(pdf2str(path, file))
 
-    valid_words = []
+    dicts = []
     for pdf in pdfs:
-        for term in pdf.split(' '):
-            for word in separate(term):
-                c_word = wc.clean(word)
-                if is_classifiable(c_word):
-                    valid_words.append(c_word)
-                    print(c_word, end=' ')  # todo: empezar a implementar Trie desde acá
+        dicts.append(hash_freq_counter(pdf))
+
 
 
 if __name__ == "__main__":
