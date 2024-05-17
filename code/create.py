@@ -1,8 +1,8 @@
 import os
 import re
-
+import trie
 import PyPDF2
-
+import pickle
 import word_class as wc
 
 
@@ -51,15 +51,17 @@ def create(path):
     for file in os.listdir(path):
         pdfs.append(pdf2str(path, file))
 
-    valid_words = []
     for pdf in pdfs:
+        d = trie.Trie()
         for term in pdf.split(' '):
             for word in separate(term):
                 c_word = wc.clean(word)
                 if is_classifiable(c_word):
-                    valid_words.append(c_word)
-                    print(c_word, end=' ')  # todo: empezar a implementar Trie desde acá
-
+                    trie.insert(d,c_word)
+        trie.leeTrie(d.root.children,"",False,0)
+        print(d)
+        #with open("pdf","wb") as f:
+        #    pickle.dump(d,f)
 
 if __name__ == "__main__":
-    create("/home/admin1/Documents/proyecto-algo2/code/test_pdfs")  # poner el directorio adecuado
+    create("/Users/facul/Onedrive/Escritorio/ProyectoAlgo2/proyecto-algo2/code/test_pdfs")  # poner el directorio adecuado
