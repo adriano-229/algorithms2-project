@@ -41,9 +41,9 @@ def clean_prefix(w):
     return w
 
 def clean_suffix(w):
-    for sym in suffixs:
+    for sym, rpl in suffixs:
         if len(w) - len(sym) > len(w)//2:
-            w = w.removesuffix(sym)
+            w = w.replace(sym,rpl)
     return w
 
 
