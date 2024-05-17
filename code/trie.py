@@ -79,7 +79,7 @@ def leeTrie(lista, cad, endWord, cont):
     for i in range(len(lista)):    
         leeTrie(lista[i].children, cad+lista[i].key,  lista[i].isEndOfWord, lista[i].cont)
 
-
+"""
 t=Trie()
 
 import random
@@ -108,3 +108,4 @@ print(len(palabras_finales))  # Verificar que la lista tenga 90,000 palabras
 for p in palabras_finales:
     insert(t,p)
 leeTrie(t.root.children,"",False,0)
+"""
