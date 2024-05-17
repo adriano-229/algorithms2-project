@@ -31,6 +31,20 @@ lista_descartes = [
 ]
 
 cambios = {'-': '', '¡': '', '!': '', '¿': '', '?': '', 'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u'}
+prefixs = {'re', 'sobre', 'sub', 'tele', 'tras', 'trans', 'ante', 'ex', 'post', 'inter', 'des', 'vice', 'semi'}
+suffixs = {'ismo': '', 'is':'i','os':'o','as':'a','es':'e', 'us': 's'}
+
+def clean_prefix(w):
+    for sym in prefixs:
+        if len(w) - len(sym) > len(w)//2:
+            w = w.removeprefix(sym)
+    return w
+
+def clean_suffix(w):
+    for sym in suffixs:
+        if len(w) - len(sym) > len(w)//2:
+            w = w.removesuffix(sym)
+    return w
 
 
 def clean(word):
@@ -51,3 +65,4 @@ def make_descartes_set():
 
 
 descartes = make_descartes_set()
+print(clean_prefix("recondito"))
