@@ -31,7 +31,7 @@ def separate(term):
     return separate
 
 
-def tf_idf_tables(i, pdf, idf):
+def tf_idf_tables(pdf, idf):
     tf = {}
     tot = 0
     for term in pdf.split(' '):
@@ -51,6 +51,8 @@ def tf_idf_tables(i, pdf, idf):
     return tf
 
 
+
+
 def create(path):
     if not os.path.isdir(path):
         print("The provided path is not a directory")
@@ -62,22 +64,23 @@ def create(path):
 
     n = len(pdfs)
 
-    w = []
-    idf = {}
-    for i, pdf in enumerate(pdfs):
-        w.append(tf_idf_tables(i, pdf, idf))
+    weights_list= []
+    idf_general = {}
+    for pdf in pdfs:
+        weights_list.append(tf_idf_tables(pdf, idf_general))
 
-    for table in w:
+    for table in weights_list:
         for key, value in table.items():
             tf_ = table[key]
             idf_ = math.log2(n / value)
-            table[key] = tf_ * idf_
-    # for table in w: todo: chequear 2), 1) si este bucle funciona, 2) que lo que arroja esté bien
-    #     for w in sorted(table, key=table.get, reverse=True):
-    #         print(w, table[w])
+            table[key] = round(tf_ * idf_, 4)
 
+    for table in weights_list:
+        for weights_list in sorted(table, key=table.get, reverse=True):
+            print(weights_list, table[weights_list])
+        print(' ')
 
 
 if __name__ == "__main__":
     create(
-        "/home/admin1/Documents/Universidad/2do/Algoritmos 2/proyecto-algo2/code/test_pdfs")  # poner el directorio adecuado
+        "/home/admin1/Documents/Universidad/2do/Algoritmos 2/proyecto-algo2/code/test_pdfs")  # poner el dir adecuado
