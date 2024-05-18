@@ -50,6 +50,11 @@ def clean_suffix(w):
 def clean(word):
     for sym, rpl in cambios.items():
         word = word.replace(sym, rpl)
+        try:
+            if int(word) not in range(1000, 3001):
+                return None
+        except:
+            pass
     return word
 
 
