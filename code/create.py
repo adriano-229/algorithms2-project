@@ -31,29 +31,6 @@ def separate(term):
     return sep
 
 
-def tf_idf_tables(pdf, idf):
-    tf = {}
-    tot = 0
-
-    terms = pdf.split(' ')
-    for term in terms:
-        words = separate(term)
-        for word in words:
-            word = wc.clean(word)
-
-            if not word:
-                continue
-            tot += 1
-
-            tf[word] = tf.get(word, 0) + 1
-            if tf[word] == 1:
-                idf[word] = idf.get(word, 0) + 1
-
-    for key, _ in tf.items():
-        tf[key] /= tot
-    return tf
-
-
 def create_word_list(string):
     word_list = []
 
@@ -78,16 +55,16 @@ def create(path):
     if not os.path.isdir(path):
         quit("The provided path is not a directory")
 
-    str_pdfs = []
+    pdfs_str = []
     corpus = os.listdir(path)
 
     for file in corpus:
-        str_pdf = pdf2str(path, file)
-        str_pdfs.append(str_pdf)
+        pdf_s = pdf2str(path, file)
+        pdfs_str.append(pdf_s)
 
     word_lists = []
-    for str_pdf in str_pdfs:
-        word_list = create_word_list(str_pdf)
+    for pdf_s in pdfs_str:
+        word_list = create_word_list(pdf_s)
         word_lists.append(word_list)
 
     general_hash = {}
@@ -123,6 +100,11 @@ def create(path):
         for word in tf.keys():
             tfidf_vector[word] = tf[word] * idf[word]
         tfidf_vectors_list.append(tfidf_vector)
+
+    for vec in tfidf_vectors_list:
+        for w, ti in vec.items():
+            print(w, ti)
+        print()
 
     # todo PICKLE DE LOS VECTORES, ENCAPSULAR FUNCIONES Y EMPEZAR EL SEARCH
 
