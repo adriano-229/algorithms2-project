@@ -34,10 +34,13 @@ def separate(term):
 def tf_idf_tables(pdf, idf):
     tf = {}
     tot = 0
-    for term in pdf.split(' '):
+
+    terms = pdf.split(' ')
+    for term in terms:
         words = separate(term)
         for word in words:
             word = wc.clean(word)
+
             if not word:
                 continue
             tot += 1
@@ -51,8 +54,6 @@ def tf_idf_tables(pdf, idf):
     return tf
 
 
-
-
 def create(path):
     if not os.path.isdir(path):
         print("The provided path is not a directory")
@@ -60,11 +61,12 @@ def create(path):
 
     pdfs = []
     for file in os.listdir(path):
-        pdfs.append(pdf2str(path, file))
+        str_pdf = pdf2str(path, file)
+        pdfs.append(str_pdf)
 
     n = len(pdfs)
 
-    weights_list= []
+    weights_list = []
     idf_general = {}
     for pdf in pdfs:
         weights_list.append(tf_idf_tables(pdf, idf_general))
