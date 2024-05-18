@@ -2,7 +2,7 @@ import os
 import re
 import trie
 import PyPDF2
-
+import pickle
 import word_class as wc
 
 class Trie:
@@ -14,6 +14,10 @@ class TrieNode:
     key = None
     isEndOfWord = False 
     cont = 0
+
+class Archivo:
+    name = None
+    tree = None
 
 def pdf2str(path, file):
     with open(os.path.join(path, file), 'rb') as f:
@@ -52,31 +56,56 @@ def is_classifiable(word):
 
 
 def create(path):
+    #60-62: se verifica que la direccion sea un directorio 
     if not os.path.isdir(path):
         print("The provided path is not a directory")
         return
-
+    #64-66: se crea una lista que contiene todo el texto de cada pdf
     pdfs = []
     for file in os.listdir(path):
         pdfs.append(pdf2str(path, file))
 
-    #valid_words = [] ; se implementa un trie por eso se deja de usar la lista 
-
-    list_trie=[]
+    # 68: crea una lista con todos los nombres de los archivos ["archivo.pdf",...]
+    list_arch = os.listdir(path)
+    #71: lista para guardar los trie
+    list_trie = []
+    # 74-77: las lista con los nombres de los archivos pasa a ser una lisata con datos del tipo Archivo()
+    # y se guardan los nombres de cada archivo en cada posicion (archivo.name)
+    for i in range(len(list_arch)):
+        a=Archivo()
+        a.name = list_arch[i]
+        list_arch[i] = a
+    
+    #81-88: el str original d cada archivo se "limpia" y se guarda una lista con 
+    # el trie de cada archivo 
     for pdf in pdfs:
         t=Trie()
         for term in pdf.split(' '):
             for word in separate(term):
                 c_word = wc.clean(word)
                 if is_classifiable(c_word):
-                    #valid_words.append(c_word) ; se deja de usar lista 
-                    #print(c_word, end=' ') # todo: empezar a implementar Trie desde acá
                     trie.insert(t,c_word)
-        #trie.leeTrie(t.root.children,"",False,0)
         list_trie.append(t)
-#falta implementar de manera correcta el pickl y resolver el problema de nombres para el pickl 
+
+    #falta implementar de manera correcta el pickl 
+    #92-93: se guarda el trie y el nombre de cada archivo en una lista 
+    for i in range(len(list_arch)):
+            list_arch[i].tree = list_trie[i]
+    #96-98: se guarda un archivo con una lista de pdfs con su nombre y trie respectivamente
+    # en memoria  
+    with open("list_arch.pkl","wb") as f:
+        pickle.dump(list_arch,f)
+        print("document data-base created successfully")
 
 if __name__ == "__main__":
-    #create("/home/admin1/Documents/proyecto-algo2/code/test_pdfs")  # poner el directorio adecuado
-    #create("/Users/Fran/OneDrive/Documentos/proyecto_algo2_2024/proyecto-algo2-1/proyecto-algo2-1/code/test_pdfs")
+
     create("/Users/Fran/OneDrive/Documentos/proyecto_algo2_2024/proyecto-algo2-1/proyecto-algo2-1/code/test_pdfs")
+
+    with open("list_arch.pkl","rb") as f:
+        archivos_list = pickle.load(f)
+
+    print("LECTURA DE ARCHIVO")
+    for i in range(len(archivos_list)):
+        print("---- ", archivos_list[i].name)
+        trie.leeTrie(archivos_list[i].tree.root.children,"",False,0)
+    
