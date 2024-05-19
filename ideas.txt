@@ -150,3 +150,16 @@ si el trie funciona, usarlo para un mejor refinado
 
 
 
+
+def process_pdfs(path):
+    pdfs_str = extract_texts_from_pdfs(path)
+    word_lists = convert_texts_to_word_lists(pdfs_str)
+    main_vec = create_main_vector(word_lists)
+    tf_list = calculate_term_frequencies(word_lists, main_vec)
+    idf = calculate_inverse_document_frequencies(tf_list, len(word_lists))
+    tfidf_vec_list = calculate_tfidf_vectors(tf_list, idf)
+    print_tfidf_vectors(tfidf_vec_list)
+
+
+
+
