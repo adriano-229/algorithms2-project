@@ -47,7 +47,7 @@ def create_word_list(string):
 def create_dicc(dicc, lst):
     for e in lst:
         if e not in dicc:
-            dicc[e] = .0
+            dicc[e] = 0
     return dicc
 
 
@@ -57,51 +57,57 @@ def create(path):
 
     pdfs_str = []
     corpus = os.listdir(path)
+    corpus_size = len(corpus)
 
     for file in corpus:
         pdf_s = pdf2str(path, file)
         pdfs_str.append(pdf_s)
+    del file, pdf_s, path, corpus
 
     word_lists = []
     for pdf_s in pdfs_str:
-        word_list = create_word_list(pdf_s)
-        word_lists.append(word_list)
+        word_lst = create_word_list(pdf_s)
+        word_lists.append(word_lst)
+    del pdfs_str, pdf_s, word_lst
 
-    general_hash = {}
-    for word_list in word_lists:
-        general_hash = create_dicc(general_hash, word_list)
+    main_vec = {}
+    for word_lst in word_lists:
+        create_dicc(main_vec, word_lst)
+    del word_lst
 
     tf_list = []
-    for word_list in word_lists:
-        tf = copy.deepcopy(general_hash)
-        for word in word_list:
+    for word_lst in word_lists:
+        tf = copy.deepcopy(main_vec)
+        for word in word_lst:
             tf[word] += 1
         for word in tf.keys():
             count = tf[word]
             if count != 0:
-                _tf = count / len(word_list)
-                tf[word] = _tf
+                tf[word] = count / len(word_lst)
         tf_list.append(tf)
+    del tf, word_lists, word_lst, word, count
 
-    idf = copy.deepcopy(general_hash)
+    idf = copy.deepcopy(main_vec)
     for tf in tf_list:
-        for word, tfreq in tf.items():
-            if tfreq > 0:
+        for word in tf.keys():
+            if tf[word] > 0:
                 idf[word] += 1
-        for word, _idf in idf.items():
-            if _idf != 0:
-                idf[word] = math.log2(len(corpus) / _idf)
+        for word in idf.keys():
+            if idf[word] != 0:
+                idf[word] = math.log2(corpus_size / idf[word])
             else:
                 idf[word] = 0
+    del tf, word
 
-    tfidf_vectors_list = []
+    tfidf_vec_list = []
     for tf in tf_list:
-        tfidf_vector = {}
+        tfidf_vec = {}
         for word in tf.keys():
-            tfidf_vector[word] = tf[word] * idf[word]
-        tfidf_vectors_list.append(tfidf_vector)
+            tfidf_vec[word] = tf[word] * idf[word]
+        tfidf_vec_list.append(tfidf_vec)
+    del idf, tf, tf_list, tfidf_vec, word, corpus_size
 
-    for vec in tfidf_vectors_list:
+    for vec in tfidf_vec_list:
         for w, ti in vec.items():
             print(w, ti)
         print()
