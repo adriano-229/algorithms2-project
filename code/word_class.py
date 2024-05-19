@@ -31,21 +31,29 @@ lista_descartes = [
 ]
 
 cambios = {'-': '', '¡': '', '!': '', '¿': '', '?': '', 'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u'}
-prefixs = {'re', 'sobre', 'sub', 'tele', 'tras', 'trans', 'ante', 'ex', 'post', 'inter', 'des', 'vice', 'semi'}
-suffixs = {'ismo': '', 'is':'i','os':'o','as':'a','es':'e', 'us': 's'}
+prefixs = {'re', 'sobre', 'sub', 'tras', 'trans', 'ante', 'ex', 'post', 'inter', 'des', 'vice', 'semi'}
+suffixs = {'ismo', 'is','os','as','es','dor', 'us', 'al', 'logía', 'imiento','ón', 'ona','oso', 'osa', 'torio', 'toria', 'ita', 'ito','ante', 'ente', 'ar'}
 
 def clean_prefix(w):
     for sym in prefixs:
-        if len(w) - len(sym) > len(w)//2:
+        if len(w) - len(sym) > 2:
             w = w.removeprefix(sym)
     return w
 
 def clean_suffix(w):
-    for sym, rpl in suffixs:
-        if len(w) - len(sym) > len(w)//2:
-            w = w.replace(sym,rpl)
+    for sym in suffixs:
+        if len(w) - len(sym) > 2:
+            w = w.removesuffix(sym)
     return w
 
+def clean_gender(w):
+    if len(w)<= 3:
+        return w
+    if w[-1] == "o":
+        w = w.removesuffix("o")
+    elif w[-1] == "a":
+        w = w.removesuffix("a")
+    return w
 
 def clean(word):
     for sym, rpl in cambios.items():
@@ -70,4 +78,3 @@ def make_descartes_set():
 
 
 descartes = make_descartes_set()
-print(clean_prefix("recondito"))
