@@ -123,9 +123,19 @@ def create(path):
         for word in tf.keys():
             tfidf_vector[word] = tf[word] * idf[word]
         tfidf_vectors_list.append(tfidf_vector)
+    
+def cosine_similarity(doc1, doc2):
+    numerator = denominator1 = denominator2 = 0
+    for word in doc1.keys():
+        numerator += doc1[word]*doc2[word]
+        denominator1 += (doc1[word])**2
+        denominator2 += (doc2[word])**2
+    return numerator / (math.sqrt(denominator1)*math.sqrt(denominator2))
+            
+
 
     # todo PICKLE DE LOS VECTORES, ENCAPSULAR FUNCIONES Y EMPEZAR EL SEARCH
 
 
 if __name__ == "__main__":
-    create("/home/admin1/Documents/proyecto-algo2/code/test_pdfs")
+    create("C:/Users/renzo/Desktop/Algoritmos2/Proyecto/proyecto-algo2/code/pdfs_pesados")
