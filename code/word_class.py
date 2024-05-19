@@ -12,7 +12,7 @@ lista_descartes = [
 
     # preposiciones
     {
-        "a", "ante", "bajo", "cabe", "con", "contra", "de", "desde", "durante", "en", "entre", "hacia", "hasta",
+        "a", "ante", "bajo", "cabe", "con", "contra", "de", "desde", "durante","como","en", "entre", "hacia", "hasta",
         "mediante", "para", "por", "según", "sin", "sobre", "tras", "versus", "vía"
     },
 
@@ -29,8 +29,14 @@ lista_descartes = [
         "del", "el", "la", "los", "las", "un", "una", "unos", "unas"
     }
 ]
-
+prefijos = ["anti","extra","micro","ex","contra","multi","macro","re","sobre","sub","tele","tras","trans","vice","semi"]
 cambios = {'-': '', '¡': '', '!': '', '¿': '', '?': '', 'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u'}
+
+def cleanprefix(word):
+    for sym in prefijos:
+        if len(word)-len(sym)> len(word)//2:
+            word = word.removeprefix(sym)
+    return word
 
 
 def clean(word):
@@ -51,3 +57,5 @@ def make_descartes_set():
 
 
 descartes = make_descartes_set()
+
+palabra = "vicepresidente"

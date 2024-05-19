@@ -50,18 +50,27 @@ def create(path):
     pdfs = []
     for file in os.listdir(path):
         pdfs.append(pdf2str(path, file))
-
+    ListaTries = []
     for pdf in pdfs:
+        print(pdfs)
         d = trie.Trie()
         for term in pdf.split(' '):
             for word in separate(term):
                 c_word = wc.clean(word)
+                c_word = wc.cleanprefix(c_word)
                 if is_classifiable(c_word):
-                    trie.insert(d,c_word)
+                    if trie.matcheador(d,c_word)==False:
+                        trie.insert(d,wc.cleanprefix(c_word))
+                    
         trie.leeTrie(d.root.children,"",False,0)
-        print(d)
-        #with open("pdf","wb") as f:
-        #    pickle.dump(d,f)
+        ListaTries.append(d)
+    with open("pdf","wb") as f:
+        pickle.dump(ListaTries,f)
 
 if __name__ == "__main__":
     create("/Users/facul/Onedrive/Escritorio/ProyectoAlgo2/proyecto-algo2/code/test_pdfs")  # poner el directorio adecuado
+
+    with open("pdf","rb") as f:
+        Triepdf = pickle.load(f)
+    print(Triepdf)
+    trie.leeTrie(Triepdf[0].root.children,"",False,0)
