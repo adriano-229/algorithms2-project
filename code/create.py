@@ -1,6 +1,7 @@
 import copy
 import math
 import os
+import pickle
 import re
 
 import PyPDF2
@@ -51,30 +52,31 @@ def create_dicc(dicc, lst):
     return dicc
 
 
-def create(path):
-    if not os.path.isdir(path):
-        quit("The provided path is not a directory")
-
-    pdfs_str = []
+def extract_texts_from_pdfs(path):
     corpus = os.listdir(path)
-    corpus_size = len(corpus)
-
+    pdfs_str = []
     for file in corpus:
         pdf_s = pdf2str(path, file)
         pdfs_str.append(pdf_s)
-    del file, pdf_s, path, corpus
+    return pdfs_str
 
+
+def convert_texts_to_word_lists(pdfs_str):
     word_lists = []
     for pdf_s in pdfs_str:
         word_lst = create_word_list(pdf_s)
         word_lists.append(word_lst)
-    del pdfs_str, pdf_s, word_lst
+    return word_lists
 
+
+def create_main_vector(word_lists):
     main_vec = {}
     for word_lst in word_lists:
         create_dicc(main_vec, word_lst)
-    del word_lst
+    return main_vec
 
+
+def calculate_term_frequencies(word_lists, main_vec):
     tf_list = []
     for word_lst in word_lists:
         tf = copy.deepcopy(main_vec)
@@ -85,9 +87,11 @@ def create(path):
             if count != 0:
                 tf[word] = count / len(word_lst)
         tf_list.append(tf)
-    del tf, word_lists, word_lst, word, count
+    return tf_list
 
-    idf = copy.deepcopy(main_vec)
+
+def calculate_inverse_document_frequencies(main_empty_vec, tf_list, corpus_size):
+    idf = copy.deepcopy(main_empty_vec)
     for tf in tf_list:
         for word in tf.keys():
             if tf[word] > 0:
@@ -97,22 +101,55 @@ def create(path):
                 idf[word] = math.log2(corpus_size / idf[word])
             else:
                 idf[word] = 0
-    del tf, word
+    return idf
 
+
+def calculate_tfidf_vectors(tf_list, idf):
     tfidf_vec_list = []
     for tf in tf_list:
         tfidf_vec = {}
         for word in tf.keys():
             tfidf_vec[word] = tf[word] * idf[word]
         tfidf_vec_list.append(tfidf_vec)
-    del idf, tf, tf_list, tfidf_vec, word, corpus_size
+    return tfidf_vec_list
 
-    for vec in tfidf_vec_list:
-        for w, ti in vec.items():
-            print(w, ti)
-        print()
 
-    # todo PICKLE DE LOS VECTORES, ENCAPSULAR FUNCIONES Y EMPEZAR EL SEARCH
+def pickle_dump(file, name):
+    with open(name, 'bw') as f:
+        pickle.dump(file, f)
+    # print('Dumped successfully!')
+    return
+
+
+def pickle_load(name):
+    with open(name, 'br') as file:
+        ld = pickle.load(file)
+    # print('Loaded successfully!')
+    return ld
+
+
+def create(path):
+    if not os.path.isdir(path):
+        raise Exception("The provided path is not a directory")
+
+    corpus_pdfs_str = extract_texts_from_pdfs(path)
+    all_word_lists = convert_texts_to_word_lists(corpus_pdfs_str)
+    main_empty_vec = create_main_vector(all_word_lists)
+    tf_list = calculate_term_frequencies(all_word_lists, main_empty_vec)
+    idf = calculate_inverse_document_frequencies(main_empty_vec, tf_list, len(corpus_pdfs_str))
+    tfidf_vec_list = calculate_tfidf_vectors(tf_list, idf)
+
+    pickle_dump(main_empty_vec, "main_empty_vec")
+    pickle_dump(tfidf_vec_list, "tfidf_vec_list")
+    print("document data-base created successfully")
+
+    # x = pickle_load("tfidf_vec_list")
+    # pass
+    #
+    # for vec in x:
+    #     for w, ti in vec.items():
+    #         print(w, ti)
+    #     print()
 
 
 if __name__ == "__main__":
