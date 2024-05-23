@@ -1,165 +1,56 @@
+Algoritmo Top-Down
 
-ESTRUCTURA GENERAL DEL ALGORITMO EN BASE A UN ANÁLISIS TOP-DOWN
+Create <path>
 
-    CREATE
-        dada una carpeta de archivos pdf hacer:
-        para cada archivo pdf "P" dentro de la carpeta hacer:
+    Para cada archivo PDF en la carpeta:
+        Crear un TRIE y un HASH para el PDF.
+        Función 1: Separar el texto en palabras.
+        Función 2: Determinar si la palabra es clasificable.
+        Si la palabra es clasificable:
+            Función 3: Normalizar la palabra.
+            Función 4: Buscar palabra asociada en el TRIE. Si no existe, agregarla.
+            Función 5: Actualizar el valor en el HASH según lo entregado por la Función 4.
+        Resultado: TRIES y HASHES por cada PDF.
 
-            crear un TRIE para P
-            crear una HASH para P
-            FUNCIÓN_1: separar el texto en palabras
-            FUNCION_2: discernir su naturaleza: es __clasificable__ o no
-            si la palabra es __clasificable__ hacer:
-            (si no lo es, pasar a la próxima palabra)
-                tomar la palabra que es __clasificable__ y hacer:
-                    FUNCION_3: desnudar la palabra
-                    FUNCION_4: buscarle una __palabraasociada__ en el TRIE, si no tiene, agregarla al TRIE
-                    FUNCION_5: en base a lo entregado por FUNCION_4, actualizar valor en HASH
-            >>> al final, tendríamos tantas TRIES y HASHES como pdf's
+Search <texto>
 
-    SEARCH <texto>
-        (tomar criterios para la semántica > armar base de datos de palabras clave)
-        ponderar entre:
-            + correspondencia o "parecido" respecto a la base de datos de palabras clave (?
-            + procesar cada palabra de búsqueda "texto" usando la FUNCION_2,3y4 y ver su similitud con la respectiva hash (???
-        arrojar % de correspondencia entre el texto a buscar y cada hash de la base, armar la lista con % de parecidos
-        ordenar lista y presentarla
+    Criterios de Semántica:
+        Base de datos de palabras clave.
+    Procesar texto de búsqueda:
+        Usar Funciones 2, 3, y 4.
+        Comparar similitud con cada HASH.
+    Resultados:
+        Lista de % de correspondencia.
+        Ordenar y presentar la lista.
 
+Funciones
 
+    Función 1: Separar palabras usando .split(' ').
+    Función 2: Determinar si una palabra es clasificable.
+    Función 3: Normalizar palabras:
+        Quitar prefijos.
+        Convertir a minúsculas.
+        Quitar tildes.
+    Función 4: Buscar o agregar palabra en TRIE:
+        Si se encuentra una palabra asociada, devolverla.
+        Si no, agregar la palabra y devolverla.
+    Función 5: Actualizar HASH:
+        Si la palabra existe, actualizar su valor.
+        Si no, agregarla con valor inicial.
 
-FUNCIONES
-    FUNCION_1: el criterio para separar las palabras puede y suele ser mediante espacios, es relativamente fácil implementar esto usando la función .split(' ')
-    FUNCION_2: ver qué tomamos como palabra __clasificable__, podemos usar una base de datos para esto (?
-    FUNCION_3: dejar la palabra desnuda = una palabra se desnuda cuando:
-        a) se le quita el prefijo: para ello, veremos si la palabra es candidata a tener un prefijo comparándola, letra por letra, con una base de datos que contiene los prefijos más comúnes del español
-        b) se le quita las mayúsculas: usamos .lower()
-        c) se le quitan las tildes: acá barremos la palabra letra por letra, viendo si posee una tilde, se intercambia la tilde por la vocal destildada (ó por o, é por e, y así)
-        una vez la palabra se ha desnudado, se la retorna
-    FUNCION_4: esta toma una palabra a buscar B, y le busca en el TRIE una __palabraasociada__ A, luego:
-        si se le encontró una __palabraasociada__ A: B no se agrega al TRIE, la función devuelve A
-        si no le encontró una __palabraasociada__ A: B agrega al TRIE, la función devuelve B
-    FUNCION_5: toma una tabla hash que usa encadenamiento, y una palabra P
-        el tamaño de la hash podría inicializarle en función del tamaño del pdf en bytes una vez lo hayamos pasado a string con la librería por la cantidad de páginas del mismo archivo en bytes
-        se usa a una función de hash (a saber), como la suma de los ord("c")
-        según la hash:
-            si P ya existe: agregamos P a la hash y actualizamos su value de aparición (%, absoluta=1)
-            si P no existe: solamente actualizamos el value de aparición de P (%, absoluta=absoluta+1)
+Conceptos
 
+    Clasificable: No es un artículo, conector, o proposición.
+    Palabra asociada: Una palabra que contiene al menos la mitad de los caracteres de otra en orden.
 
+Ideas
 
-CONCEPTOS
-__clasificable__: una palabra podría ser clasificable si NO ES: un artículo, conector, proposición o palabras similares que no sean "desarmables", es decir, no pueda encontrarse su "raíz"
-__palabraasociada__: se dice que una palabra A está asociada a una palabra C cuando A contiene por lo menos la mitad* de los caracteres que tiene B en forma ordenada (A=contraataque len=12 - B=ataque len=6, como 6>=12/2, A y B están asociadas)
-    * podemos ajustar este valor
+    Usar with para manejar archivos.
+    Utilizar yaml si es necesario.
+    Serialización con pickle.dump.
 
-IDEAS
-preferir with antes que open + close
-usar yaml en caso sea necesario
-pickle.dump(objeto, nombre_archivo_f), sirve para serializar = "transformar en un formato adecuado para guardar el archivo en memoria"
+Procedimiento Final
 
-
-
-Dada una lista de palabras pertenecientes a un documento, necesitamos una función con esta especificación:
-
-getFreqHash(lst)
-
-Entrada: lista Python de palabras (strings)
-Proceso: se crea una tabla hash que use linear probing, esta tabla debe tener por slots el par (key, value) donde "key" es el string y "value" es la cantidad de veces que ha aparecido esa palabra dividido entre el número total de palabras (n)
-Salida: la tabla hash resultante
-
-
-
-
-
-FUNCION_1
-    create_word_list(pdf_i)
-    >> tomo un pdf y hace la separación correspondiente en palabras, esta las va agregando a una lista
-    << retorna la lista de palabras correspondientes
-
-
-FUNCION_2
-    create_empty_hash(hash_general, lista_palabras_pdf_i)
-    >> toma y recorre una lista_palabras_pdf_i (FUNCION_1), y agrega cada palabra a un diccionario "referencia" con un
-    value vacío
-    << devuelve la hash_general (un diccionario "referencia")
-
-
-    en el segundo barrido actualizamos los values con el tf de cada palabra de cada documento, a la par se hace el idf general
-    cuando termina el segundo barrido, se actualizan los values de los vectores tf para que tenga el tf-idf final (se multiplica por idf básicamente)
-
-
-FUNCION_3
-    create_tf(lista_palabras_pdf_i)
-    >> toma lista_palabras_pdf_i (FUNCION_1), recorre y hace el tf tal como ya lo tenemos hecho: es decir, también hace
-    un contador general y luego divide el value entre este valor
-    >> retorna la hash-tf_i (particular)
-
-
-FUNCION_4
-    create_idf(hash-tf_i, idf_general)
-
-    FUNCION_5
-        doc_counter(hash-tf_i, idf_general)
-        >> toma el hash particular y agrega un contador al idf_general, recordar, que con que la palabra este, es suficiente
-         para ese documento
-        << devuelve, opcionalmente (por ser de referencia), el idf_general
-
-    FUNCION_6
-        una vez se hayan barrido todos los documentos, y hechos los contadores, hacer:
-        apply_idf(idf_general)
-        >> para cada key_value del idf general, hacer: log2(N/value), donde N es el tamaño del corpus
-        << devolver el idf_general
-
-
-FUNCION_7
-    una vez se tengan todos los tfs, y el idf general, se procede a la multiplicación de ambos valores para que cada
-    documento tenga sus vectores completos en dimensión
-    esto se hace documento por documento, ie, tf_i por tf_i
-
-
-    multiply_tf_idf(tf_i, idf_general)
-    >> para cada key-value del tf_i, hace el producto (solo el producto), con el idf
-    << devuelve el weight_vector_i del documento_i
-
-    se van agregando estos vectores a una lista
-
-FUNCION_8
-hacer el pickle una vez se terminan los hashes (vectores) originales, también con una hash de values vacía para tener de referencia y usarla con el texto del search
-
-
-
-
-
-
-
-con el texto del search, hacer lo mismo (de crear el tf-idf), si una palabra no está en la hash de referencia del corpus, agregarla a cada hash (vector) de cada documento
-
-hacer la similitud entre la hash del texto y cada uno de los vectores de los documentos (ahora, hay coherencia de componentes y significado)
-más cerca de 1, mayor similitud entre documentos
-
-ordenar e imprimir
-
-
-
-
-
-
-hacer la semántica para quitar plurales, tratando de no romper las palabras
-si el trie funciona, usarlo para un mejor refinado
-
-
-
-
-
-def process_pdfs(path):
-    pdfs_str = extract_texts_from_pdfs(path)
-    word_lists = convert_texts_to_word_lists(pdfs_str)
-    main_vec = create_main_vector(word_lists)
-    tf_list = calculate_term_frequencies(word_lists, main_vec)
-    idf = calculate_inverse_document_frequencies(tf_list, len(word_lists))
-        tfidf_vec_list = calculate_tfidf_vectors(tf_list, idf)
-    print_tfidf_vectors(tfidf_vec_list)
-
-
-
-
+    Crear TRIES y HASHES para cada PDF.
+    Procesar texto de búsqueda y calcular similitud.
+    Ordenar resultados y presentarlos.
