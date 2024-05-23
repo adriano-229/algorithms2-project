@@ -22,8 +22,8 @@ def create_texts_from_pdfs(path):
     corpus = os.listdir(path)
     pdfs_str = []
     for file in corpus:
-        pdf_s = pdf2str(path, file)
-        pdfs_str.append(pdf_s)
+        pdf = pdf2str(path, file)
+        pdfs_str.append(pdf)
     return pdfs_str
 
 
@@ -78,8 +78,6 @@ def calculate_inverse_document_frequencies(main_empty_vec, tf_list, corpus_size)
         for word in idf.keys():
             if idf[word] != 0:
                 idf[word] = math.log2(corpus_size / idf[word])
-            else:
-                idf[word] = 0
     return idf
 
 
