@@ -86,8 +86,8 @@ def create(path):
                 if is_classifiable(c_word):
                     trie.insert(t,c_word)
         list_trie.append(t)
-
-    #falta implementar de manera correcta el pickl 
+        
+         
     #92-93: se guarda el trie y el nombre de cada archivo en una lista 
     for i in range(len(list_arch)):
             list_arch[i].tree = list_trie[i]

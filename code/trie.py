@@ -7,12 +7,9 @@ class TrieNode:
     key = None
     isEndOfWord = False 
     cont = 0
-
-def findKey(L,c):
-
-    for i in range(len(L)):
-        if L[i].key==c:
-            return L[i]
+def findKey(D,c):
+    if c in D:
+        return D.get(c)
     return None
 
 def insertR(node,cad):
@@ -22,9 +19,9 @@ def insertR(node,cad):
     t.parent=node
     t.key=k
     if node.children is None:
-        node.children=[t]
+        node.children={k:t}
     else:
-        node.children.append(t)
+        node.children[k]=t
 
     if len(cad)==1:
         t.isEndOfWord=True
@@ -60,52 +57,22 @@ def insert(T,cad):
             else:
                 node=node.children
 
-        insertR(node[0].parent,cad[n:])
+        insertR(list(node.values())[0].parent,cad[n:])
         return T
     else:
         t=TrieNode()
         t.key=cad[0]
         t.parent=T.root
-        T.root.children.append(t)
+        T.root.children[cad[0]]=t
         insertR(t,cad[1:])
         return T
-    
+ 
 def leeTrie(lista, cad, endWord, cont):
+    #print(lista)
     if endWord is True:
         print(cad, "+= ", cont)
     if lista is None:
         return  
     
     for i in range(len(lista)):    
-        leeTrie(lista[i].children, cad+lista[i].key,  lista[i].isEndOfWord, lista[i].cont)
-
-"""
-t=Trie()
-
-import random
-
-# Palabras aleatorias
-palabras_aleatorias = [
-    "Elefante", "Avión", "Caramelo", "Montaña", "Radio", "Sombrero", "Guitarra", 
-    "Espejo", "Manzana", "Mariposa", "Reloj", "Globo", "Camino", "Castillo", 
-    "Silla", "Camisa", "Papel", "Pelota", "Chocolate", "Árbol", "Lámpara", 
-    "Ventana", "Perro", "Gato", "Nube", "Flor", "Pájaro", "Tren", "Computadora", 
-    "Llave", "Piano", "Tigre", "Luna", "Caracol", "Teléfono", "Helado", "Moneda", 
-    "Maleta", "Bufanda", "León", "Zapato", "Carta", "Bastón", "Bandera", "Oso", 
-    "Paraguas", "Bolsa", "Martillo", "Dinosaurio", "Abanico"
-]
-
-# Generar una lista de 90,000 palabras combinando aleatorias y repetidas
-palabras_repetidas = palabras_aleatorias * 2000
-palabras_finales = palabras_repetidas + random.choices(palabras_aleatorias, k=88000)
-
-# Mezclar la lista para asegurar aleatoriedad
-random.shuffle(palabras_finales)
-
-print(len(palabras_finales))  # Verificar que la lista tenga 90,000 palabras
-
-
-for p in palabras_finales:
-    insert(t,p)
-leeTrie(t.root.children,"",False,0)
-"""
+        leeTrie(list(lista.values())[i].children, cad+list(lista.values())[i].key,  list(lista.values())[i].isEndOfWord, list(lista.values())[i].cont)
