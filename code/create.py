@@ -60,7 +60,8 @@ def create(path):
                 c_word = wc.clean(word)
                 c_word = wc.cleanprefix(c_word)
                 if is_classifiable(c_word):
-                    trie.Insert(d,c_word)
+                    if trie.matcheador(d,c_word)==False:
+                        trie.Insert(d,c_word)
                     
         ListaTries.append(d)
     with open("pdf","wb") as f:
@@ -68,7 +69,6 @@ def create(path):
 
 if __name__ == "__main__":
     create("/Users/facul/Onedrive/Escritorio/ProyectoAlgo2/proyecto-algo2/code/test_pdfs")  # poner el directorio adecuado
-
     with open("pdf","rb") as f:
         Triepdf = pickle.load(f)
     print(Triepdf)

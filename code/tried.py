@@ -61,9 +61,7 @@ def PalabrasArbolRD(Children,palabra,ListaP):
       PalabrasArbolRD(y,palabra,ListaP)
     palabra = palabravieja
 
-print("estoy en tried")
-T = Trie()
-InsertD(T,"facundo")
-InsertD(T,"facundo")
-InsertD(T,"aristoteles")
-print(PalabrasArbolD(T))
+
+
+
+
