@@ -2,6 +2,7 @@ import copy
 import math
 import os
 import re
+import pickle
 
 import PyPDF2
 
@@ -75,15 +76,22 @@ def create_dicc(dicc, lst):
 
 
 def create(path):
-    if not os.path.isdir(path):
-        quit("The provided path is not a directory")
-
-    str_pdfs = []
-    corpus = os.listdir(path)
-
-    for file in corpus:
-        str_pdf = pdf2str(path, file)
-        str_pdfs.append(str_pdf)
+    ispath = True
+    if type(path) == str:
+        print(path)
+        ispath = False
+    else:
+        if not os.path.isdir(path):
+            quit("The provided path is not a directory")
+    if ispath:
+        str_pdfs = []
+        corpus = os.listdir(path)
+        for file in corpus:
+            str_pdf = pdf2str(path, file)
+            str_pdfs.append(str_pdf)
+    else:
+        str_pdfs = [path]
+        corpus = [path]
 
     word_lists = []
     for str_pdf in str_pdfs:
@@ -124,18 +132,21 @@ def create(path):
             tfidf_vector[word] = tf[word] * idf[word]
         tfidf_vectors_list.append(tfidf_vector)
     
+    return tfidf_vectors_list
+
 def cosine_similarity(doc1, doc2):
     numerator = denominator1 = denominator2 = 0
     for word in doc1.keys():
+        print(word)
         numerator += doc1[word]*doc2[word]
         denominator1 += (doc1[word])**2
         denominator2 += (doc2[word])**2
     return numerator / (math.sqrt(denominator1)*math.sqrt(denominator2))
-            
-
 
     # todo PICKLE DE LOS VECTORES, ENCAPSULAR FUNCIONES Y EMPEZAR EL SEARCH
 
 
+
 if __name__ == "__main__":
-    create("C:/Users/renzo/Desktop/Algoritmos2/Proyecto/proyecto-algo2/code/pdfs_pesados")
+    with open ('estructuras_pdf', 'bw') as f:
+        pickle.dump(create("C:/Users/renzo/Desktop/Algoritmos2/Proyecto/proyecto-algo2/code/test_pdfs"), f)

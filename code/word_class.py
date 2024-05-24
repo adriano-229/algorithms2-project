@@ -32,7 +32,7 @@ lista_descartes = [
 
 cambios = {'-': '', '¡': '', '!': '', '¿': '', '?': '', 'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u'}
 prefixs = {'re', 'sobre', 'sub', 'tras', 'trans', 'ante', 'ex', 'post', 'inter', 'des', 'vice', 'semi'}
-suffixs = {'ismo','s','dor', 'al', 'logía', 'imiento', 'ona','oso', 'osa', 'torio', 'toria', 'ita', 'ito','ante', 'ente', 'ar'}
+suffixs = {'ismo','s','dor', 'al', 'logía', 'imiento', 'ona','oso', 'osa', 'torio', 'toria', 'ita', 'ito','ante', 'ente', 'ar','azo','aza'}
 
 def clean_prefix(w):
     for sym in prefixs:
