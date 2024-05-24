@@ -52,17 +52,16 @@ def create(path):
         pdfs.append(pdf2str(path, file))
     ListaTries = []
     for pdf in pdfs:
-        print(pdfs)
         d = trie.Trie()
+        raiz = trie.TrieNode()
+        d.root = raiz
         for term in pdf.split(' '):
             for word in separate(term):
                 c_word = wc.clean(word)
                 c_word = wc.cleanprefix(c_word)
                 if is_classifiable(c_word):
-                    if trie.matcheador(d,c_word)==False:
-                        trie.insert(d,wc.cleanprefix(c_word))
+                    trie.Insert(d,c_word)
                     
-        trie.leeTrie(d.root.children,"",False,0)
         ListaTries.append(d)
     with open("pdf","wb") as f:
         pickle.dump(ListaTries,f)
@@ -73,4 +72,4 @@ if __name__ == "__main__":
     with open("pdf","rb") as f:
         Triepdf = pickle.load(f)
     print(Triepdf)
-    trie.leeTrie(Triepdf[0].root.children,"",False,0)
+    print(trie.PalabrasArbol(Triepdf[0]))

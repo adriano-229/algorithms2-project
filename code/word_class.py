@@ -21,7 +21,7 @@ lista_descartes = [
         'mientras', 'entonces', 'también', 'o', 'sino', 'además', 'cuando', 'pero', 'así que', 'por otro lado',
         'sin embargo', 'asimismo', 'si', 'porque', 'no obstante', 'aun cuando', 'ya que', 'si bien', 'a pesar de',
         'por el contrario', 'a la vez', 'así', 'en cambio', 'aun', 'aunque', 'y', 'incluso', 'por lo tanto', 'luego',
-        'por tanto', 'después', 'antes'
+        'por tanto', 'después', 'antes',"mas"
     },
 
     # articulos
