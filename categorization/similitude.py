@@ -1,28 +1,29 @@
 import math
 
 
-def dot_product(v1, v2): #Calcula el producto escalar entre dos diccionarios
-    result = 0
-    for word in v1.keys():
-        try:
-            result += v1[word] * v2[word]
-        except:
-            pass #Se pasa ya que la multiplicacion daria 0
-    return result
+def dot_product(v1, v2):
+    dot = 0
+    vec_size = len(v1)
+    for i in range(vec_size):
+        dot += v1[i] * v2[i]
+    return dot
 
 
-def modulus(v): #Realiza la operacion modulo en un diccionario
+def modulus(v):
     mod = 0
-    for c in v.keys():
-        mod += v[c] ** 2
+    for c in v:
+        mod += c ** 2
     return math.sqrt(mod)
 
-def cosine_similarity(mainDoc, secondaryDoc): #Similitud del coseno entre un documento con otro
-    denominator = modulus(mainDoc) * modulus(secondaryDoc)
+
+def cosine_similarity(v1, v2):
+    denominator = modulus(v1) * modulus(v2)
     if denominator == 0:
+        print("Warning: division by zero, returning zero")
         return 0
-    return dot_product(mainDoc, secondaryDoc) / denominator
+    return dot_product(v1, v2) / denominator
 
 
-
-
+if __name__ == "__main__":
+    print(cosine_similarity([0, 0], [234, 0]))
+    print(cosine_similarity([100, 3], [234, 3]))
