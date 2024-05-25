@@ -21,7 +21,7 @@ def cosine_similarity(v1, v2):
     if denominator == 0:
         print("Warning: division by zero, returning zero")
         return 0
-    return round(dot_product(v1, v2) / denominator, 4)
+    return dot_product(v1, v2) / denominator
 
 
 if __name__ == "__main__":

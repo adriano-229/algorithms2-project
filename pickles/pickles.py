@@ -1,7 +1,7 @@
 import os
 import pickle
 
-PATH = "/home/admin1/Documents/Universidad/2do/Algoritmos 2/proyecto-algo2/pickles"
+PATH = "/home/admin1/Documents/Universidad/2do/Algoritmos2/proyecto-algo2/pickles"
 
 
 def pickle_dump(file, name):

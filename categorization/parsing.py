@@ -36,7 +36,7 @@ def create_word_lists_from_texts(pdfs_str):
             words = re.findall(r'[a-zA-ZñÑáéíóúÁÉÍÓÚ]+|\d+', term.lower())
             for word in words:
                 word = wc.clean(word)
-                if word:
+                if word and word not in wc.descartes:
                     word_list.append(word)
         return word_list
 

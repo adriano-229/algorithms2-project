@@ -6,26 +6,29 @@ DB_TF_LIST = "DB_TF_LIST"
 DB_MAIN_EMPTY_VEC = "DB_MAIN_EMPTY_VEC"
 
 
-# def create_db():
-#     try:
-#         open(os.path.join(PATH, DB_FILENAMES))
-#         open(os.path.join(PATH, DB_MAIN_EMPTY_VEC))
-#         if not bool(input("DB exists, rewrite DB? Press 1 YES or ENTER NO: ")):
-#             print("Finished")
-#             return
-#     except:
-#         if not bool(input("No existing DB, want to create? Press 1 YES or ENTER NO: ")):
-#             print("No db created, quiting")
-#             return
-#         else:
-#             pass
+def rewrite_db():
+    try:
+        open(os.path.join(PATH, DB_FILENAMES))
+        open(os.path.join(PATH, DB_MAIN_EMPTY_VEC))
+        rewrite = bool(input("DB exists, rewrite DB? Press 1 YES or ENTER NO: "))
+        if not rewrite:
+            print("using created DB")
+            print("document data-base created successfully")
+        return rewrite
+
+    except:
+        create = bool(input("Nonexistent DB, create DB? Press 1 YES or ENTER NO: "))
+        if not create:
+            quit("quiting program")
+        return create
 
 
 def create(path):
     if not os.path.isdir(path):
         raise Exception("The provided path is not a directory")
 
-    # create_db()
+    if not rewrite_db():
+        return
 
     corpus_pdfs_str = create_texts_from_pdfs(path)
     filenames, texts = list(corpus_pdfs_str.keys()), corpus_pdfs_str.values()
@@ -42,4 +45,4 @@ def create(path):
 
 
 if __name__ == "__main__":
-    create("/home/admin1/Documents/Universidad/2do/Algoritmos 2/proyecto-algo2/pdfs/simple")
+    create("/home/admin1/Documents/Universidad/2do/Algoritmos2/proyecto-algo2/pdfs/complex")
