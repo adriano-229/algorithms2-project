@@ -45,4 +45,4 @@ def create(path):
 
 
 if __name__ == "__main__":
-    create("/home/admin1/Documents/Universidad/2do/Algoritmos2/proyecto-algo2/pdfs/complex")
+    create("/home/admin1/Documents/Universidad/2do/Algoritmos2/proyecto-algo2/pdfs")

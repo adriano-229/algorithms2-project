@@ -1,53 +1,8 @@
-import operator
-
 from create import DB_FILENAMES, DB_TF_LIST, DB_MAIN_EMPTY_VEC
+from formatting import remove_keys, associate_names, sort_present_dicc
 from parsing import *
 from pickles import *
-from similitude import cosine_similarity
-
-
-def remove_keys(dic_list):
-    lst = []
-    for dic in dic_list:
-        lst.append(list(dic.values()))
-    return lst
-
-
-def associate_names(names_lst, ele_lst):
-    dic = {}
-    if len(names_lst) != len(ele_lst):
-        raise Exception("associate_names error!")
-
-    for i in range(len(names_lst)):
-        dic[names_lst[i]] = ele_lst[i]
-    return dic
-
-
-def compare_cosine_similarity(vec_set, vec):
-    ans = []
-    for v in vec_set:
-        simil = round(cosine_similarity(v, vec) * 100, 1)
-        ans.append(simil)
-    return ans
-
-
-def sort_present_dicc(dicc):
-    def format_percentage(value, decimals=2):
-        width = decimals + 3
-        return f"{value:>{width}.{decimals}f} %"
-
-    tot = 0
-    for value in dicc.values():
-        tot += value
-        if tot == 0:
-            tot = 0.01
-    for file, value in dicc.items():
-        dicc[file] = round(value / tot * 100, 2)
-    lst = dicc.items()
-    lst = sorted(lst, key=operator.itemgetter(1), reverse=True)
-    for file, ans in lst:
-        print(f"{format_percentage(ans)} — {file}")
-    return lst
+from similitude import compare_cosine_similarity
 
 
 def search(text):
@@ -66,13 +21,12 @@ def search(text):
     tf_list += search_tf
     idf = calculate_inverse_document_frequencies(main_empty_vec, tf_list, corpus_size)
     tfidf_vec_list = calculate_tfidf_vectors(tf_list, idf)
-    del word, corpus_size, idf, main_empty_vec, search_tf, tf_list, tf
 
-    tfidf_vec_list = remove_keys(tfidf_vec_list)
-    search_vector = tfidf_vec_list.pop()
-    db_vectors = tfidf_vec_list
+    create_vectors = remove_keys(tfidf_vec_list)
+    search_vector = create_vectors.pop()
+    del corpus_size, idf, main_empty_vec, search_tf, text, tf, tf_list, tfidf_vec_list
 
-    compare = compare_cosine_similarity(db_vectors, search_vector)
+    compare = compare_cosine_similarity(create_vectors, search_vector)
     result = associate_names(filenames, compare)
     result = sort_present_dicc(result)
     return result
@@ -80,18 +34,39 @@ def search(text):
 
 if __name__ == "__main__":
     search("""
-En el análisis de todo ese periodo, se muestra la menor dedicación al
-estudio por parte de los que no han obtenido el título de GESO y de los que
-tienen el título de CFGM, frente a los que obtuvieron el GESO y el título
-de bachillerato. No obstante, la participación en el mercado de trabajo difie-
-re ampliamente entre quienes tienen el título de CFGM y quienes no han
-obtenido el título de GESO, puesto que es más favorable para el primer
-grupo, en tanto participa en mayor grado en el empleo, tiene menos periodos
-de paro y de no participación en el mundo laboral ni en la educación. En
-ambos grupos, las mujeres —respecto a los hombres— presentan menor dedi-
-cación al mundo productivo, están desempleadas en mayor grado o se
-encuentran sin buscar trabajo.
-    """)  # Respuesta: Educación 2 FALLA en realzar la semántica, ya que el texto es exactamente el mismo del de un doc.
+    La Mixteca Alta Oaxaqueña, México (MAO), presenta niveles
+moderados a graves de degradación de suelo. La erosión hídri-
+ca y eólica son las principales causas de esa degradación, con
+pérdidas de suelo entre 50 y 200 Mg ha-1 año-1 y en algunas
+zonas puede ser mayor. Los indicadores de calidad (ICS) son
+herramientas útiles para evaluar el estado de la fertilidad del
+suelo y su degradación. El objetivo de este estudio fue generar
+indicadores de calidad (univariados) cuyos valores, compren-
+didos dentro de una escala única, permitan evaluar la fertili-
+dad de suelos de la MAO y situarlos en un mapa temático de
+degradación. Las hipótesis fueron: 1) los atributos evaluados
+en este estudio funcionan como ICS y 2) los valores de los
+ICS que varían dentro de una escala única permiten compa-
+rar los estados de estos atributos. El valor de los indicadores
+permitirá proponer acciones correctivas del manejo agronó-
+mico de los suelos y evitar su degradación. Esta propuesta es
+de ejecución fácil, costo bajo, generación rápida, que usa in-
+formación disponible en la literatura y puede apoyar políticas
+públicas regionales. Los atributos químicos y fisicoquímicos
+evaluados fueron: pH, materia orgánica (MO), P extraíble
+(Pex), bases de intercambio (Ca, Mg y K), capacidad de inter-
+cambio catiónico efectiva (CICE); además, uno biológico, el
+carbono en biomasa microbiana (CBM). Con estos atributos
+se definieron los indicadores de calidad, los valores de éstos y
+las clases de calidad de suelo en sitios agrícolas y degradados
+de cinco localidades de la MAO: Tonaltepec, Gavillera, Cerro
+Prieto, Nduayaco y Pericón, donde hubo apoyo de la comu-
+nidad. El muestreo fue completamente aleatorio. Los sitios
+de donde se obtuvieron las muestras para generar los ICS se
+georeferenciaron y ubicaron en un mapa temático de tipos de
+degradación.
+    """)
+    # Respuesta: Agrociencia -> FALLA en realzar la semántica, ya que el texto es exactamente el mismo del de un doc.
 
 # TODO
 # 1) Formatear y FINALIZAR el proyecto con tf-idf por palabra, incluyendo sufijos y plurales

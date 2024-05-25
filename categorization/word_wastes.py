@@ -16,7 +16,7 @@ lista_descartes = [
         "mediante", "para", "por", "según", "sin", "sobre", "tras", "versus", "vía"
     },
 
-    # conjunciones
+    # conectores
     {
         'mientras', 'entonces', 'también', 'o', 'sino', 'además', 'cuando', 'pero', 'así que', 'por otro lado',
         'sin embargo', 'asimismo', 'si', 'porque', 'no obstante', 'aun cuando', 'ya que', 'si bien', 'a pesar de',
