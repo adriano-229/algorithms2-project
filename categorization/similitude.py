@@ -19,9 +19,17 @@ def modulus(v):
 def cosine_similarity(v1, v2):
     denominator = modulus(v1) * modulus(v2)
     if denominator == 0:
-        print("Warning: division by zero, returning zero")
+        # print("Warning: division by zero, returning zero")
         return 0
     return dot_product(v1, v2) / denominator
+
+
+def compare_cosine_similarity(vec_set, vec):
+    ans = []
+    for v in vec_set:
+        simil = cosine_similarity(v, vec)
+        ans.append(simil)
+    return ans
 
 
 if __name__ == "__main__":

@@ -77,7 +77,7 @@ def calculate_inverse_document_frequencies(main_empty_vec, tf_list, corpus_size)
                 idf[word] += 1
         for word in idf.keys():
             if idf[word] != 0:
-                idf[word] = math.log2(corpus_size / idf[word])
+                idf[word] = math.log(corpus_size / idf[word])
     return idf
 
 
