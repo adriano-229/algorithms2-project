@@ -58,12 +58,9 @@ def clean_gender(w):
 def clean(word):
     for sym, rpl in cambios.items():
         word = word.replace(sym, rpl)
-<<<<<<< HEAD:code/word_class.py
         word = clean_prefix(word)
         word = clean_suffix(word)
         word = clean_gender(word)
-=======
->>>>>>> 5f22b47ecae3de7d636246e21326dea950592ea7:categorization/word_wastes.py
         try:
             if int(word) not in range(1000, 3001):
                 return None

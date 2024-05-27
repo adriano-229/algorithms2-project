@@ -1,5 +1,5 @@
 from categorization.parsing import *
-from pickles import *
+from pickles import pickles
 
 FILENAME_DB_TF_LIST = "DB_TF_LIST"
 FILENAME_DB_MAIN_EMPTY_VEC = "DB_MAIN_EMPTY_VEC"
@@ -33,8 +33,8 @@ def create(path):
     # tfidf_vec_list = calculate_tfidf_vectors(tf_list, idf)
     # print(cosine_similarity(list(tfidf_vec_list[2].values()), list(tfidf_vec_list[1].values())))
 
-    pickle_dump(tf_list, FILENAME_DB_TF_LIST)
-    pickle_dump(main_empty_vec, FILENAME_DB_MAIN_EMPTY_VEC)
+    pickles.pickle_dump(tf_list, FILENAME_DB_TF_LIST)
+    pickles.pickle_dump(main_empty_vec, FILENAME_DB_MAIN_EMPTY_VEC)
     print("document data-base created successfully")
 
 
