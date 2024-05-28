@@ -30,7 +30,7 @@ lista_descartes = [
     }
 ]
 prefijos = ["anti","extra","micro","ex","contra","multi","macro","re","sobre","sub","tele","tras","trans","vice","semi"]
-cambios = {'-': '', '¡': '', '!': '', '¿': '', '?': '', 'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u'}
+cambios = {'-': '', '¡': '', '!': '', '¿': '', '?': '', 'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u',',': ''}
 
 def cleanprefix(word):
     for sym in prefijos:
@@ -57,5 +57,3 @@ def make_descartes_set():
 
 
 descartes = make_descartes_set()
-
-palabra = "vicepresidente"

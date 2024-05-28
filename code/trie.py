@@ -1,6 +1,7 @@
 import pickle
+
 class Trie:
-	root = None
+  root = None
 
 class TrieNode:
     parent = None
@@ -8,6 +9,7 @@ class TrieNode:
     key = None
     isEndOfWord = False 
     cont = 0
+    contexto = None
 
 
 def PalabrasArbol(T):
@@ -82,16 +84,25 @@ def leeTrie(lista, cad, endWord, cont):
     for i in range(len(lista)):    
         leeTrie(lista[i].children, cad+lista[i].key,  lista[i].isEndOfWord, lista[i].cont)
 
-def matcheador(T,word):
+def matcheador(T,word,llamado):
+
   Lista = MatchsD(T,word)
-  print(Lista)
-  if len(Lista)==0:
+  if llamado==0:
+    if len(Lista)==0:
+        return False
+    if len(word)>2 and Lista[1]>=50:
+      Lista[2].cont += 1
+      return True
+    else:
       return False
-  if len(word)>2 and Lista[1]>=50:
-     Lista[2].cont += 1
-     return True
   else:
-    return False
+     if len(Lista)==0:
+        return 0
+     else:
+        if Lista[1]>=50:
+           return 1
+        else:
+           return 0
 
 def CarcularParecido(match,palabra,prefijo,ListaPalabras,Children):
    
@@ -114,41 +125,6 @@ def CarcularParecido(match,palabra,prefijo,ListaPalabras,Children):
         else:
             return False  
    
-
-def Matchs(T,prefijo):
-    ListaPalabras = []
-    Children = T.root
-    k = 0
-    matchs = 0
-    i = 0
-    palabra = ""
-    while True:
-        if Children.children==None:
-            return ListaPalabras
-        if i==len(Children.children):
-            return ListaPalabras
-        else:
-            if Children.children[i].key==prefijo[k]:
-                matchs = matchs + 1
-                k = k + 1
-                palabra = palabra + Children.children[i].key
-                if Children.children[i].isEndOfWord==True:
-                    if CarcularParecido(matchs,palabra,prefijo,ListaPalabras,Children.children[i])==False:
-                        return ListaPalabras
-                if k==len(prefijo):
-                    if Children.isEndOfWord==False:
-                        return(MatchsR(matchs,palabra,prefijo,ListaPalabras,Children.children[i]))
-                    else:
-                        break
-                Children = Children.children[i]
-                i = 0
-
-            elif Children.children[i].key!=prefijo[k] and matchs!=0:
-                return(MatchsR(matchs,palabra,prefijo,ListaPalabras,Children))
-            else:
-                i = i + 1
-    return ListaPalabras
-
 def MatchsR(matchs,palabra,prefijo,ListaPalabras,Children):
     if Children.children==None:
        q = 0
@@ -169,7 +145,6 @@ def MatchsR(matchs,palabra,prefijo,ListaPalabras,Children):
       palabra = vieja
 
     return ListaPalabras
-
 
 def MatchsD(T,prefijo):
   ListaPalabras = []
@@ -205,12 +180,6 @@ def MatchsD(T,prefijo):
            i = i + 1
 
   return ListaPalabras
-
-
-T = Trie()
-Insert(T,"obra")
-print(matcheador(T,"obreros"))
-
 
 
 
