@@ -2,7 +2,6 @@ from categorization.parsing import *
 from pickles import pickles
 
 FILENAME_DB_TF_LIST = "DB_TF_LIST"
-FILENAME_DB_MAIN_EMPTY_VEC = "DB_MAIN_EMPTY_VEC"
 
 
 def create(path):
@@ -26,17 +25,19 @@ def create(path):
     filenames = corpus_pdfs_str.keys()  # TODO, asociar nombres a resultados
 
     word_lists = create_word_lists_from_texts(corpus_pdfs_str.values())
-    main_empty_vec = create_main_vector(word_lists)
-    tf_list = calculate_term_frequencies(word_lists, main_empty_vec)
+    #main_empty_vec = create_main_vector(word_lists)
+    tf_list = calculate_term_frequencies(word_lists) #main_empty_vec
 
-    # idf = calculate_inverse_document_frequencies(main_empty_vec, tf_list, len(corpus_pdfs_str))
-    # tfidf_vec_list = calculate_tfidf_vectors(tf_list, idf)
-    # print(cosine_similarity(list(tfidf_vec_list[2].values()), list(tfidf_vec_list[1].values())))
-
+    idf = calculate_inverse_document_frequencies(tf_list) #(main_empty_vec, tf_list, len(corpus_pdfs_str))
+    
+    pickles.pickle_dump(idf, "DB_IDF_LIST")
+    pickles.pickle_dump(list(filenames), "FILENAMES")
     pickles.pickle_dump(tf_list, FILENAME_DB_TF_LIST)
-    pickles.pickle_dump(main_empty_vec, FILENAME_DB_MAIN_EMPTY_VEC)
+    #pickles.pickle_dump(main_empty_vec, FILENAME_DB_MAIN_EMPTY_VEC)
     print("document data-base created successfully")
 
 
+"""
 if __name__ == "__main__":
     create("/home/admin1/Documents/Universidad/2do/Algoritmos 2/proyecto-algo2/pdfs/simple")
+"""
