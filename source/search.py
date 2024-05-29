@@ -24,7 +24,7 @@ def search(text):
 
     create_vectors = remove_keys(tfidf_vec_list)
     search_vector = create_vectors.pop()
-    del corpus_size, idf, main_empty_vec, search_tf, text, tf, tf_list, tfidf_vec_list
+    del corpus_size, idf, main_empty_vec, search_tf, text, tf_list, tfidf_vec_list
 
     compare = compare_cosine_similarity(create_vectors, search_vector)
     result = associate_names(filenames, compare)
