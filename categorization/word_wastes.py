@@ -31,11 +31,36 @@ lista_descartes = [
 ]
 
 cambios = {'-': '', '¡': '', '!': '', '¿': '', '?': '', 'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u'}
+prefixs = {'re', 'sobre', 'sub', 'tras', 'trans', 'ante', 'ex', 'post', 'inter', 'des', 'vice', 'semi'}
+suffixs = {'ismo','s','dor', 'al', 'logía', 'imiento', 'ona','oso', 'osa', 'torio', 'toria', 'ita', 'ito','ante', 'ente', 'ar','azo','aza'}
 
+def clean_prefix(w):
+    for sym in prefixs:
+        if len(w) - len(sym) > 2:
+            w = w.removeprefix(sym)
+    return w
+
+def clean_suffix(w):
+    for sym in suffixs:
+        if len(w) - len(sym) > 2:
+            w = w.removesuffix(sym)
+    return w
+
+def clean_gender(w):
+    if len(w)<= 3:
+        return w
+    if w[-1] == "o":
+        w = w.removesuffix("o")
+    elif w[-1] == "a":
+        w = w.removesuffix("a")
+    return w
 
 def clean(word):
     for sym, rpl in cambios.items():
         word = word.replace(sym, rpl)
+        word = clean_prefix(word)
+        word = clean_suffix(word)
+        word = clean_gender(word)
         try:
             if int(word) not in range(1000, 3001):
                 return None
