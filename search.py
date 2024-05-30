@@ -4,9 +4,13 @@ from pickles.pickles import *
 from categorization.similitude import cosine_similarity
 
 def search(text):
-    DB_TF_LIST = pickle_load("DB_TF_LIST")
-    DB_IDF_LIST = pickle_load("DB_IDF_LIST")
-    FILENAMES = pickle_load("FILENAMES")
+    try:
+        DB_TF_LIST = pickle_load("DB_TF_LIST")
+        DB_IDF_LIST = pickle_load("DB_IDF_LIST")
+        FILENAMES = pickle_load("FILENAMES")
+    except:
+        print("not db created")
+        quit()
     word_list = create_word_lists_from_texts([text])
 
     search_tf = calculate_term_frequencies(word_list)
@@ -21,7 +25,13 @@ def search(text):
 
     ranked = {}
     for i in range(len(tfidf_vec_lists)-1): #Realiza la similitud del coseno para cada documento
-        ranked[FILENAMES[i]] = cosine_similarity(tfidf_vec_lists[-1],tfidf_vec_lists[i])
+        simil = cosine_similarity(tfidf_vec_lists[-1],tfidf_vec_lists[i])
+        if simil > 0.005:
+          ranked[FILENAMES[i]] = simil
+    
+    if len(ranked) == 0:
+        print("document not found")
+        quit()
 
     ranked = {k: v for k, v in sorted(ranked.items(), key=lambda item: item[1], reverse = True)} #Ordena el diccionario
 
@@ -29,3 +39,5 @@ def search(text):
     for k in ranked.keys(): #Muestra el orden final de resultados
         count += 1
         print(f"{count}. {k}")
+        
+    return ranked #Devuelve el diccionario ordenado
