@@ -33,6 +33,10 @@ def sort_present_dicc(dicc):
         dicc[file] = (value / tot) * 100
     lst = dicc.items()
     lst = sorted(lst, key=operator.itemgetter(1), reverse=True)
+    shown = 0
     for file, ans in lst:
+        if ans == 0:
+            break
+        shown += 1
         print(f"{format_percentage(ans)} — {file}")
-    return lst
+    return bool(shown)
