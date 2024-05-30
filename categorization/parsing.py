@@ -5,17 +5,18 @@ from categorization.word_wastes import *
 import PyPDF2
 
 
-def pdf2str(path, file):
+def pdf2str(path, file): #Funcion que se encarga de hacer uso de la libreria
     with open(os.path.join(path, file), 'rb') as f:
         reader = PyPDF2.PdfReader(f)
 
         txt = ""
         for p in range(len(reader.pages)):
             txt += reader.pages[p].extract_text()
+    txt.replace(" ", "")
     return txt
 
 
-def create_texts_from_pdfs(path):
+def create_texts_from_pdfs(path): #Convierte los archivos pdf a str
     corpus = os.listdir(path)
     pdfs_str = {}
     for file in corpus:
@@ -24,10 +25,10 @@ def create_texts_from_pdfs(path):
     return pdfs_str
 
 
-def create_word_lists_from_texts(pdfs_str):
+def create_word_lists_from_texts(pdfs_str): #Crea los tokens de cada palabra para luego pasarlos a bigramas
+
     def create_word_list(string):
         word_list = []
-
         terms = string.split(' ')
         for term in terms:
             words = re.findall(r'[a-zA-ZñÑáéíóúÁÉÍÓÚ]+|\d+', term.lower())
@@ -35,6 +36,8 @@ def create_word_lists_from_texts(pdfs_str):
                 word = clean(word)
                 if word:
                     word_list.append(word)
+        for i in range(len(word_list)-1):
+            word_list[i] = word_list[i] + " " + word_list[i+1]
         return word_list
 
     word_lists = []
@@ -43,22 +46,11 @@ def create_word_lists_from_texts(pdfs_str):
         word_lists.append(word_lst)
     return word_lists
 
-"""
-def create_main_vector(word_lists):
-    main_vec = {}
-    for word_lst in word_lists:
-        for word in word_lst:
-            main_vec[word] = main_vec.get(word, 0)
-    return main_vec
-"""
-
-def calculate_term_frequencies(word_lists): #(word_lists, main_vec)
+def calculate_term_frequencies(word_lists): #Calcula la aparicion de cada palabra en su respectivo documento
     tf_list = []
     for word_lst in word_lists:
-        #tf = copy.deepcopy(main_vec)
         tf = {}
         for word in word_lst:
-            #tf[word] += 1
             tf[word] = tf.get(word,0) + 1
         for word in tf.keys():
             count = tf[word]
@@ -68,8 +60,7 @@ def calculate_term_frequencies(word_lists): #(word_lists, main_vec)
     return tf_list
 
 
-def calculate_inverse_document_frequencies(tf_list): #(main_empty_vec, tf_list, corpus_size)
-    #idf = copy.deepcopy(main_empty_vec)
+def calculate_inverse_document_frequencies(tf_list): #Calcula unicamente en cuantos documentos aparece una palabra
     idf = {}
     for tf in tf_list:
         for word in tf.keys():
@@ -79,7 +70,7 @@ def calculate_inverse_document_frequencies(tf_list): #(main_empty_vec, tf_list, 
     return idf
 
 
-def calculate_tfidf_vectors(tf_list, idf):
+def calculate_tfidf_vectors(tf_list, idf): #Calcula finalmente el valor tf-idf
     tfidf_vec_list = []
     for tf in tf_list:
         tfidf_vec = {}

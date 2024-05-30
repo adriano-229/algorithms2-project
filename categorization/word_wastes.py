@@ -34,6 +34,7 @@ cambios = {'-': '', '¡': '', '!': '', '¿': '', '?': '', 'á': 'a', 'é': 'e', 
 prefixs = {'re', 'sobre', 'sub', 'tras', 'trans', 'ante', 'ex', 'post', 'inter', 'des', 'vice', 'semi'}
 suffixs = {'ismo','s','dor', 'al', 'logía', 'imiento', 'ona','oso', 'osa', 'torio', 'toria', 'ita', 'ito','ante', 'ente', 'ar','azo','aza'}
 
+
 def clean_prefix(w):
     for sym in prefixs:
         if len(w) - len(sym) > 2:
@@ -58,9 +59,6 @@ def clean_gender(w):
 def clean(word):
     for sym, rpl in cambios.items():
         word = word.replace(sym, rpl)
-        word = clean_prefix(word)
-        word = clean_suffix(word)
-        word = clean_gender(word)
         try:
             if int(word) not in range(1000, 3001):
                 return None
