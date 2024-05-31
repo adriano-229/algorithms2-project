@@ -2,36 +2,34 @@ import math
 
 
 def dot_product(v1, v2):
-    dot = 0
-    vec_size = len(v1)
-    for i in range(vec_size):
-        dot += v1[i] * v2[i]
-    return dot
+    result = 0
+    for word in v1.keys():
+        try:
+            result += v1[word] * v2[word]
+        except:
+            continue
+    return result
 
 
 def modulus(v):
     mod = 0
-    for c in v:
-        mod += c ** 2
+    for c in v.keys():
+        mod += v[c] ** 2
     return math.sqrt(mod)
 
 
 def cosine_similarity(v1, v2):
     denominator = modulus(v1) * modulus(v2)
     if denominator == 0:
-        # print("Warning: division by zero, returning zero")
         return 0
     return dot_product(v1, v2) / denominator
 
 
-def compare_cosine_similarity(vec_set, vec):
+def compare_with_cosine_similarity(vec_set, pivot_vec):
     ans = []
     for v in vec_set:
-        simil = cosine_similarity(v, vec)
+        simil = cosine_similarity(v, pivot_vec)
         ans.append(simil)
     return ans
 
 
-if __name__ == "__main__":
-    print(cosine_similarity([0, 0], [234, 0]))
-    print(cosine_similarity([100, 3], [234, 3]))
