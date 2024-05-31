@@ -34,12 +34,13 @@ def create_word_lists_from_texts(pdfs_str): #Crea los tokens de cada palabra par
             words = re.findall(r'[a-zA-ZñÑáéíóúÁÉÍÓÚ]+|\d+', term.lower())
             for word in words:
                 word = clean(word)
-                if word:
+                if word != None and word not in descartes:
                     word_list.append(word)
         for i in range(len(word_list)-1):
-            word_list[i] = word_list[i] + " " + word_list[i+1]
+            word_list.append(word_list[i] + " " + word_list[i+1])
+            
         return word_list
-
+    
     word_lists = []
     for pdf_s in pdfs_str:
         word_lst = create_word_list(pdf_s)
