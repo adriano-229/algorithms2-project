@@ -26,7 +26,7 @@ def search(text):
     ranked = {}
     for i in range(len(tfidf_vec_lists)-1): #Realiza la similitud del coseno para cada documento
         simil = cosine_similarity(tfidf_vec_lists[-1],tfidf_vec_lists[i])
-        if simil > 0.001:
+        if simil > 0.003:
           ranked[FILENAMES[i]] = simil
     
     if len(ranked) == 0:

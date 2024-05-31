@@ -38,7 +38,7 @@ def create_word_lists_from_texts(pdfs_str): #Crea los tokens de cada palabra par
                     word_list.append(word)
         for i in range(len(word_list)-1):
             word_list.append(word_list[i] + " " + word_list[i+1])
-            
+
         return word_list
     
     word_lists = []
