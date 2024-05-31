@@ -1,7 +1,6 @@
 from formatting import remove_keys, associate_names, sort_present_dicc
-from globals import DB_FILENAMES, DB_TF_LIST, DB_MAIN_EMPTY_VEC
 from parsing import *
-from pickles import pickle_load
+from pickles_ import *
 from similitude import compare_cosine_similarity
 
 

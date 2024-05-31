@@ -1,5 +1,0 @@
-DB_FILENAMES = "DB_FILENAMES"
-DB_TF_LIST = "DB_TF_LIST"
-DB_MAIN_EMPTY_VEC = "DB_MAIN_EMPTY_VEC"
-PICKLES_DUMP_PATH = "/home/admin1/Documents/Universidad/2do/Algoritmos2/proyecto-algo2/pickles"
-PDF_FOLDER_PATH = "/home/admin1/Documents/Universidad/2do/Algoritmos2/proyecto-algo2/pdfs"

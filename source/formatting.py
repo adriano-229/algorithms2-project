@@ -38,5 +38,6 @@ def sort_present_dicc(dicc):
         if ans == 0:
             break
         shown += 1
-        print(f"{format_percentage(ans)} — {file}")
+        # print(f"{format_percentage(ans)} — {file}")
+        print(file)
     return bool(shown)
