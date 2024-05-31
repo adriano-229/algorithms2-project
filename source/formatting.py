@@ -2,13 +2,6 @@ import math
 import operator
 
 
-def remove_keys(dic_list):
-    lst = []
-    for dic in dic_list:
-        lst.append(list(dic.values()))
-    return lst
-
-
 def associate_names(names_lst, ele_lst):
     dic = {}
     # if len(names_lst) != len(ele_lst):
@@ -23,7 +16,7 @@ def format_percentage(value, decimals=2):
     return f"{value:>{width}.{decimals}f} %"
 
 
-def sort_present_dicc(dicc):
+def sort_show_dicc(dicc):
     tot = 0
     for value in dicc.values():
         tot += value
@@ -35,9 +28,9 @@ def sort_present_dicc(dicc):
     lst = sorted(lst, key=operator.itemgetter(1), reverse=True)
     shown = 0
     for file, ans in lst:
-        if ans == 0:
+        if ans < 4:
             break
         shown += 1
         # print(f"{format_percentage(ans)} — {file}")
-        print(file)
+        print(f"{shown}: {file}")
     return bool(shown)

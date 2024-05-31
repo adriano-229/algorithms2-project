@@ -2,7 +2,7 @@ import pickle
 
 DB_FILENAMES = "DB_FILENAMES.pkl"
 DB_TF_LIST = "DB_TF_LIST.pkl"
-DB_MAIN_EMPTY_VEC = "DB_MAIN_EMPTY_VEC.pkl"
+DB_IDF = "DB_IDF.pkl"
 
 
 def pickle_dump(to_save, name):

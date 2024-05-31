@@ -1,5 +1,3 @@
-import copy
-import math
 import os
 import re
 
@@ -40,6 +38,8 @@ def create_word_lists_from_texts(pdfs_str):
                 word = wc.clean(word)
                 if word and word not in wc.descartes:
                     word_list.append(word)
+        # for i in range(len(word_list) - 1):
+        #     word_list.append(word_list[i] + " " + word_list[i + 1])
         return word_list
 
     word_lists = []
@@ -57,12 +57,12 @@ def create_main_vector(word_lists):
     return main_vec
 
 
-def calculate_term_frequencies(word_lists, main_vec):
+def calculate_term_frequencies(word_lists):
     tf_list = []
     for word_lst in word_lists:
-        tf = copy.deepcopy(main_vec)
+        tf = {}
         for word in word_lst:
-            tf[word] += 1
+            tf[word] = tf.get(word, 0) + 1
         for word in tf.keys():
             count = tf[word]
             if count != 0:
@@ -71,15 +71,11 @@ def calculate_term_frequencies(word_lists, main_vec):
     return tf_list
 
 
-def calculate_inverse_document_frequencies(main_empty_vec, tf_list, corpus_size):
-    idf = copy.deepcopy(main_empty_vec)
-    for tf in tf_list:
-        for word in tf.keys():
-            if tf[word] > 0:
-                idf[word] += 1
-        for word in idf.keys():
-            if idf[word] != 0:
-                idf[word] = math.log(corpus_size / idf[word])
+def calculate_document_occurrences(word_lists):
+    idf = {}
+    for word_lst in word_lists:
+        for word in word_lst:
+            idf[word] = idf.get(word, 0) + 1
     return idf
 
 
