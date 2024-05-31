@@ -1,14 +1,10 @@
-from categorization.parsing import *
-from globals import DB_FILENAMES, DB_TF_LIST, DB_MAIN_EMPTY_VEC, PDF_FOLDER_PATH
-from pickles import pickle_dump
+from parsing import *
+from pickles_ import *
 
 
 def create(path):
     if not os.path.isdir(path):
         raise Exception("The provided path is not a directory")
-
-    # if not rewrite_db():
-    #     return
 
     corpus_pdfs_str = create_texts_from_pdfs(path)
     filenames, texts = list(corpus_pdfs_str.keys()), corpus_pdfs_str.values()
@@ -23,12 +19,8 @@ def create(path):
         DB_TF_LIST: tf_list,
         DB_MAIN_EMPTY_VEC: main_empty_vec
     }
-    for var, name in dump.items():
-        pickle_dump(name, var)
+    for name, content in dump.items():
+        pickle_dump(content, name)
 
     print("document data-base created successfully")
     return
-
-
-if __name__ == "__main__":
-    create(PDF_FOLDER_PATH)

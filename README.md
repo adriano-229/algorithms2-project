@@ -18,8 +18,6 @@ datos.
 ## Estructura del Repositorio 📁
 
 - **source/**: Código fuente del proyecto.
-- **categorization/**: Funciones auxiliares.
-- **pickles/**: Dumping y opening de archivos.
 - **pdfs/**: Para casos de prueba.
 
 ## Tecnologías Utilizadas 🛠️

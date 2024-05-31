@@ -22,6 +22,8 @@ def create_texts_from_pdfs(path):
     corpus = os.listdir(path)
     pdfs_str = {}
     for file in corpus:
+        if file.endswith(".pkl"):
+            continue
         pdf = pdf2str(path, file)
         pdfs_str[file] = pdf
     return pdfs_str
