@@ -4,6 +4,7 @@ import trie
 import PyPDF2
 import pickle
 import word_class as wc
+from match import *
 
 class Trie:
 	root = None
@@ -26,6 +27,7 @@ def pdf2str(path, file):
 
         for p in range(len(reader.pages)):
             txt += reader.pages[p].extract_text()
+    txt=txt.replace(" ","")
     return txt
 
 
@@ -56,27 +58,27 @@ def is_classifiable(word):
 
 
 def create(path):
-    #60-62: se verifica que la direccion sea un directorio 
+    #: se verifica que la direccion sea un directorio 
     if not os.path.isdir(path):
         print("The provided path is not a directory")
         return
-    #64-66: se crea una lista que contiene todo el texto de cada pdf
+    #: se crea una lista que contiene todo el texto de cada pdf
     pdfs = []
     for file in os.listdir(path):
         pdfs.append(pdf2str(path, file))
 
-    # 68: crea una lista con todos los nombres de los archivos ["archivo.pdf",...]
+    # : crea una lista con todos los nombres de los archivos ["archivo.pdf",...]
     list_arch = os.listdir(path)
-    #71: lista para guardar los trie
+    #: lista para guardar los trie
     list_trie = []
-    # 74-77: las lista con los nombres de los archivos pasa a ser una lisata con datos del tipo Archivo()
+    # : las lista con los nombres de los archivos pasa a ser una lisata con datos del tipo Archivo()
     # y se guardan los nombres de cada archivo en cada posicion (archivo.name)
     for i in range(len(list_arch)):
         a=Archivo()
         a.name = list_arch[i]
         list_arch[i] = a
     
-    #81-88: el str original d cada archivo se "limpia" y se guarda una lista con 
+    #: el str original d cada archivo se "limpia" y se guarda una lista con 
     # el trie de cada archivo 
     for pdf in pdfs:
         t=Trie()
@@ -88,10 +90,10 @@ def create(path):
         list_trie.append(t)
         
          
-    #92-93: se guarda el trie y el nombre de cada archivo en una lista 
+    #: se guarda el trie y el nombre de cada archivo en una lista 
     for i in range(len(list_arch)):
             list_arch[i].tree = list_trie[i]
-    #96-98: se guarda un archivo con una lista de pdfs con su nombre y trie respectivamente
+    #: se guarda un archivo con una lista de pdfs con su nombre y trie respectivamente
     # en memoria  
     with open("list_arch.pkl","wb") as f:
         pickle.dump(list_arch,f)
@@ -103,9 +105,17 @@ if __name__ == "__main__":
 
     with open("list_arch.pkl","rb") as f:
         archivos_list = pickle.load(f)
-
+    
     print("LECTURA DE ARCHIVO")
     for i in range(len(archivos_list)):
         print("---- ", archivos_list[i].name)
-        trie.leeTrie(archivos_list[i].tree.root.children,"",False,0)
+        print("1---- ",matcher(archivos_list[i].tree,"vida"))
+        print("2---- ",matcher(archivos_list[i].tree,"muerte"))
+        print("3---- ",matcher(archivos_list[i].tree,"bosque"))
+        print("4---- ",matcher(archivos_list[i].tree,"senador"))
+        print("5---- ",matcher(archivos_list[i].tree,"sendar"))
+        print("6---- ",matcher(archivos_list[i].tree,"casas"))
+        print("7---- ",matcher(archivos_list[i].tree,"maravillosa"))
+        print("8---- ",matcher(archivos_list[i].tree,"oportunista"))
+        #trie.leeTrie(archivos_list[i].tree.root.children,"",False,0)
     
