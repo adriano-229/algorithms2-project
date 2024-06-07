@@ -11,7 +11,7 @@ def create(path):
 
     word_lists = create_word_lists_from_texts(texts)
     tf_list = calculate_term_frequencies(word_lists)
-    idf = calculate_document_occurrences(word_lists)
+    idf = calculate_document_occurrences(tf_list)
 
     dump = {
         DB_FILENAMES: list(filenames),

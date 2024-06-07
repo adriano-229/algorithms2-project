@@ -38,8 +38,6 @@ def create_word_lists_from_texts(pdfs_str):
                 word = wc.clean(word)
                 if word and word not in wc.descartes:
                     word_list.append(word)
-        # for i in range(len(word_list) - 1):
-        #     word_list.append(word_list[i] + " " + word_list[i + 1])
         return word_list
 
     word_lists = []
@@ -71,11 +69,11 @@ def calculate_term_frequencies(word_lists):
     return tf_list
 
 
-def calculate_document_occurrences(word_lists):
+def calculate_document_occurrences(word_set_lists):
     idf = {}
-    for word_lst in word_lists:
+    for word_lst in word_set_lists:
         for word in word_lst:
-            idf[word] = idf.get(word, 0) + 1
+            idf[word] = idf.get(word, 1) + 1
     return idf
 
 
