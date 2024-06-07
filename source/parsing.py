@@ -3,7 +3,7 @@ import re
 
 import PyPDF2
 
-import word_wastes as wc
+import source.word_wastes as wc
 
 
 def pdf2str(path, file):

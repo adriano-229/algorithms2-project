@@ -1,5 +1,5 @@
-from parsing import *
-from pickles_ import *
+from source.parsing import *
+from source.pickles_ import *
 
 
 def create(path):
@@ -24,6 +24,3 @@ def create(path):
     print("document data-base created successfully")
     return
 
-
-if __name__ == "__main__":
-    create("/home/admin1/Documents/Universidad/2do/Algoritmos2/proyecto-algo2/pdfs")

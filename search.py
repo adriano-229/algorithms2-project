@@ -1,9 +1,9 @@
 import math
 
-from formatting import associate_names, sort_show_dicc
-from parsing import *
-from pickles_ import *
-from similitude import compare_with_cosine_similarity
+from source.formatting import associate_names, sort_show_dicc
+from source.parsing import *
+from source.pickles_ import *
+from source.similitude import compare_with_cosine_similarity
 
 
 def search(text):
@@ -33,11 +33,5 @@ def search(text):
 
     if not sort_show_dicc(result):
         print("document not found")
-    return
+    return result
 
-
-if __name__ == "__main__":
-    search("""
-    La Mixteca Alta Oaxaqueña, México (MAO), presenta niveles
-moderados a graves de degradación de suelo.
-    """)
