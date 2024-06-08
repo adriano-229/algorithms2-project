@@ -47,14 +47,6 @@ def create_word_lists_from_texts(pdfs_str):
     return word_lists
 
 
-def create_main_vector(word_lists):
-    main_vec = {}
-    for word_lst in word_lists:
-        for word in word_lst:
-            main_vec[word] = main_vec.get(word, 0)
-    return main_vec
-
-
 def calculate_term_frequencies(word_lists):
     tf_list = []
     for word_lst in word_lists:
@@ -73,7 +65,7 @@ def calculate_document_occurrences(word_set_lists):
     idf = {}
     for word_lst in word_set_lists:
         for word in word_lst:
-            idf[word] = idf.get(word, 1) + 1
+            idf[word] = idf.get(word, 0) + 1
     return idf
 
 

@@ -21,7 +21,7 @@ def search(text):
     db_tf_list += search_tf
 
     for word in word_list[0]:
-        db_idf[word] = db_idf.get(word, 1) + 1
+        db_idf[word] = db_idf.get(word, 0) + 1
     for word in db_idf.keys():
         db_idf[word] = math.log2(corpus_size / db_idf[word])
 
@@ -34,4 +34,3 @@ def search(text):
     if not sort_show_dicc(result):
         print("document not found")
     return result
-

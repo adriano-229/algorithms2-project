@@ -31,5 +31,3 @@ def compare_with_cosine_similarity(vec_set, pivot_vec):
         simil = cosine_similarity(v, pivot_vec)
         ans.append(simil)
     return ans
-
-

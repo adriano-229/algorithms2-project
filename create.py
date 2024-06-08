@@ -23,4 +23,3 @@ def create(path):
 
     print("document data-base created successfully")
     return
-
