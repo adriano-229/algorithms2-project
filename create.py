@@ -13,6 +13,7 @@ def create(path):
     tf_list = calculate_term_frequencies(word_lists)
     idf = calculate_document_occurrences(tf_list)
 
+    # Guardado en disco de la base de datos.
     dump = {
         DB_FILENAMES: list(filenames),
         DB_TF_LIST: tf_list,

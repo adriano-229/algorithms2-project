@@ -11,9 +11,11 @@ def search(text):
         print("document not found")
         return
 
+    # Levantar datos de la BD creada.
     db_filenames = pickle_load(DB_FILENAMES)
     db_tf_list = pickle_load(DB_TF_LIST)
     db_idf = pickle_load(DB_IDF)
+
     corpus_size = len(db_tf_list) + 1
 
     word_list = create_word_lists_from_texts([text])
@@ -33,4 +35,4 @@ def search(text):
 
     if not sort_show_dicc(result):
         print("document not found")
-    return result
+    return

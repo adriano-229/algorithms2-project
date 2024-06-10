@@ -4,8 +4,8 @@ import operator
 
 def associate_names(names_lst, ele_lst):
     dic = {}
-    # if len(names_lst) != len(ele_lst):
-    #     raise Exception("associate_names error!")
+    if len(names_lst) != len(ele_lst):
+        raise Exception("associate_names error!")
     for i in range(len(names_lst)):
         dic[names_lst[i]] = ele_lst[i]
     return dic

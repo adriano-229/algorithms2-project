@@ -20,7 +20,7 @@ def modulus(v):
 
 def cosine_similarity(v1, v2):
     denominator = modulus(v1) * modulus(v2)
-    if denominator == 0:
+    if denominator == 0:  # caso indeterminado resuelto arbitrariamente
         return 0
     return dot_product(v1, v2) / denominator
 

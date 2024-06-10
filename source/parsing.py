@@ -9,7 +9,6 @@ import source.word_wastes as wc
 def pdf2str(path, file):
     with open(os.path.join(path, file), 'rb') as f:
         reader = PyPDF2.PdfReader(f)
-
         txt = ""
         for p in range(len(reader.pages)):
             txt += reader.pages[p].extract_text()
@@ -36,7 +35,7 @@ def create_word_lists_from_texts(pdfs_str):
             words = re.findall(r'[a-zA-ZñÑáéíóúÁÉÍÓÚ]+|\d+', term.lower())
             for word in words:
                 word = wc.clean(word)
-                if word and word not in wc.descartes:
+                if word and len(word) > 2 and word not in wc.descartes:
                     word_list.append(word)
         return word_list
 
