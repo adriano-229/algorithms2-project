@@ -1,43 +1,38 @@
 import math
-from categorization.parsing import *
-from pickles.pickles import *
-from categorization.similitude import cosine_similarity
+
+from source.formatting import associate_names, sort_show_dicc
+from source.parsing import *
+from source.pickles_ import *
+from source.similitude import compare_with_cosine_similarity
+
 
 def search(text):
-    try:
-        DB_TF_LIST = pickle_load("DB_TF_LIST")
-        DB_IDF_LIST = pickle_load("DB_IDF_LIST")
-        FILENAMES = pickle_load("FILENAMES")
-    except:
-        print("not db created")
-        quit()
-    word_list = create_word_lists_from_texts([text])
-
-    search_tf = calculate_term_frequencies(word_list)
-    DB_TF_LIST += search_tf
-
-    for word in word_list[0]: #Agrega y actualiza las palabras que se encuentran en el texto
-        DB_IDF_LIST[word] = DB_IDF_LIST.get(word,0) + 1
-    for word in DB_IDF_LIST.keys(): #Saca el idf teniendo en consideracion el texto agregado
-        DB_IDF_LIST[word] = math.log2(len(DB_TF_LIST) / DB_IDF_LIST[word])
-
-    tfidf_vec_lists = calculate_tfidf_vectors(DB_TF_LIST, DB_IDF_LIST)
-
-    ranked = {}
-    for i in range(len(tfidf_vec_lists)-1): #Realiza la similitud del coseno para cada documento
-        simil = cosine_similarity(tfidf_vec_lists[-1],tfidf_vec_lists[i])
-        if simil > 0.003:
-          ranked[FILENAMES[i]] = simil
-    
-    if len(ranked) == 0:
+    if not text:
         print("document not found")
-        quit()
+        return
 
-    ranked = {k: v for k, v in sorted(ranked.items(), key=lambda item: item[1], reverse = True)} #Ordena el diccionario
+    # Levantar datos de la BD creada.
+    db_filenames = pickle_load(DB_FILENAMES)
+    db_tf_list = pickle_load(DB_TF_LIST)
+    db_idf = pickle_load(DB_IDF)
 
-    count = 0
-    for k in ranked.keys(): #Muestra el orden final de resultados
-        count += 1
-        print(f"{count}. {k}")
-        
-    return ranked #Devuelve el diccionario ordenado
+    corpus_size = len(db_tf_list) + 1
+
+    word_list = create_word_lists_from_texts([text])
+    search_tf = calculate_term_frequencies(word_list)
+    db_tf_list += search_tf
+
+    for word in word_list[0]:
+        db_idf[word] = db_idf.get(word, 0) + 1
+    for word in db_idf.keys():
+        db_idf[word] = math.log2(corpus_size / db_idf[word])
+
+    tfidf = calculate_tfidf_vectors(db_tf_list, db_idf)
+    search_vector = tfidf.pop()
+
+    compare = compare_with_cosine_similarity(tfidf, search_vector)
+    result = associate_names(db_filenames, compare)
+
+    if not sort_show_dicc(result):
+        print("document not found")
+    return

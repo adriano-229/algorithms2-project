@@ -1,11 +1,12 @@
 import sys
 
-import create
 import search
+import create
+
 
 
 def invalid():
-    quit("invalid command")
+    quit("Invalid command.")
 
 
 if len(sys.argv) != 3:
